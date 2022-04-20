@@ -1,7 +1,6 @@
 import express from "express";
 import path from "path";
 import initialize from "./models/init.js";
-import userUtils from "./controllers/user-controller.js";
 
 const app = express();
 const port = 3000;
@@ -24,8 +23,6 @@ app.use(
 app.use(
     express.static(path.resolve("public"))
 );
-
-app.get("/", userUtils.create);
 
 app.listen(port, host, () => {
 
