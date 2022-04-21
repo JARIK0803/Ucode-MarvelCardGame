@@ -1,3 +1,5 @@
+const strRegexp = /^\w+$/;
+
 export default function initUser (sequelize, DataTypes) {
 
     return sequelize.define("user", {
@@ -5,6 +7,25 @@ export default function initUser (sequelize, DataTypes) {
             type: DataTypes.INTEGER,
             primaryKey: true,
             autoIncrement: true
+        },
+        login: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            unique: true,
+            validate: {
+                is: strRegexp
+            }
+        },
+        nickname: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            unique: true,
+            validate: {
+                is: strRegexp
+            }
+        },
+        avatar: {
+            type: DataTypes.BLOB
         }
     });
 
