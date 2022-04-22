@@ -12,17 +12,24 @@ export default function initUser (sequelize, DataTypes) {
             type: DataTypes.STRING,
             allowNull: false,
             unique: true,
-            validate: {
-                is: strRegexp
-            }
+            // validate: {
+            //     is: strRegexp
+            // }
         },
         nickname: {
             type: DataTypes.STRING,
             allowNull: false,
             unique: true,
-            validate: {
-                is: strRegexp
-            }
+            // validate: {
+            //     is: strRegexp
+            // }
+        },
+        password: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            // validate: {
+            //     is: strRegexp
+            // }
         },
         avatar: {
             type: DataTypes.BLOB

@@ -1,7 +1,7 @@
 {
     "host": "localhost",
     "user": "root",
-    "password": "",
+    "password": "root",
     "database": "race01",
     "dialect": "mysql",
     "pool": {
