@@ -6,8 +6,8 @@ import db from "../models/index.js";
 const User = db.sequelize.models.user;
 const TYPE_SUCCESS = 'success';
 const TYPE_ERROR = 'error';
-const TOKEN_EXPIRE_SEC = 60 * 60 * 2; // 2h
-// const TOKEN_EXPIRE_SEC = 10;
+// const TOKEN_EXPIRE_SEC = 60 * 60 * 2; // 2h
+const TOKEN_EXPIRE_SEC = 10; // 10sec
 
 function generateAccessToken(payload) {
     return jwt.sign(payload, 'secret', { expiresIn: TOKEN_EXPIRE_SEC, });
