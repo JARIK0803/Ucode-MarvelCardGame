@@ -8,8 +8,11 @@ html(lang="en")
         link(rel="stylesheet", href="styles/login.css")
     body 
         h1 Authorization
-        form.form
+        form(class="form" id="form")
             input(id="login" name="login" type="text" placeholder="Login" required)
             input(id="password" name="password" type="password" placeholder="Password" required)
             button(type="submit") login
-        a(href="register")  create an account
+        div.notify
+        a(href="/register")  create an account
+
+        script(src="scripts/login.js")

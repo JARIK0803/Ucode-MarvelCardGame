@@ -6,7 +6,7 @@ function validateLogin(login) {
     if (!/^[a-zA-Z0-9]+$/.test(login)) 
         return 'The login must containt only a-z, A-Z, 0-9';
     if (login.length > 16) 
-        return 'The login length must be shorter than 16 symbols';
+        return 'The login length must not exceed 16 symbols';
 
     return '';
 }
@@ -19,7 +19,7 @@ function validateNickname(nickname) {
     if (!/^[a-zA-Z0-9_-]+$/.test(nickname)) 
         return 'The nickname must containt only a-z, A-Z, 0-9, _, -';
     if (nickname.length > 16) 
-        return 'The nickname length must be shorter than 16 symbols';
+        return 'The nickname length must not exceed 16 symbols';
 
     return '';
 }
@@ -36,7 +36,7 @@ function validatePassword(password, repassword) {
     if (!/(?=.*[A-Z])/.test(password))
         return 'The password should contain at least one upper case';
     if (password.length > 16) 
-        return 'The password length must be shorter than 16 symbols';
+        return 'The password length must not exceed 16 symbols';
     if (password !== repassword)
         return 'Passwords do not match';
 

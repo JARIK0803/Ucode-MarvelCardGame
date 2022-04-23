@@ -7,31 +7,27 @@ const TYPE_SUCCESS = 'success';
 const TYPE_ERROR = 'error';
 
 async function checkLogin(newLogin) {
-    let res = await User.findAll({
+    let res = await User.findOne({
         where: {
             login: newLogin
         }
-    })
-    console.log(res);
+    });
 
-    if (res.length) {
+    if (res)
         return 'The user with this login already exists';
-    }
 
     return '';
 }
 
 async function checkNickname(newNickname) {
-    let res = await User.findAll({
+    let res = await User.findOne({
         where: {
             nickname: newNickname
         }
-    })
-    console.log(res);
+    });
 
-    if (res.length) {
+    if (res)
         return 'The user with this nickname already exists';
-    }
 
     return '';
 }
