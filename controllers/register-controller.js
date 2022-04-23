@@ -47,16 +47,17 @@ async function checkUnique(userData) {
     return res;
 }
 
-async function register(userData) {
-    let res = await checkUnique(userData);
-
-    if (res.type === TYPE_SUCCESS) {
-        const hash = bcrypt.hashSync(userData.password, 10);
-        const user = await User.create({nickname: userData.nickname, login: userData.login, password: hash});
+async function register(req, res) {
+    const data = req.body;
+    let result = await checkUnique(data);
+    
+    if (result.type === TYPE_SUCCESS) {
+        const hash = bcrypt.hashSync(data.password, 10);
+        const user = await User.create({nickname: data.nickname, login: data.login, password: hash});
         console.log(user.toJSON());
     }
     
-    return res;
+    res.json(result);
 }
 
 export default register;

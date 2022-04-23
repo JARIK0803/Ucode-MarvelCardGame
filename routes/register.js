@@ -8,14 +8,6 @@ router.get('/', (req, res) => {
     res.render(path.resolve('public', 'views', 'register.pug'))
 });
 
-router.post('/', async (req, res) => {
-    const data = req.body;
-    const result = await register(data);
-    res.json(result);
-});
-
-// router.get('/login', (req, res) => {
-//     res.redirect('/');
-// });
+router.post('/', register);
 
 export default router;

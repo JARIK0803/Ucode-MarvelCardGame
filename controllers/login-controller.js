@@ -28,7 +28,7 @@ async function checkErrors(data, user) {
     return res; 
 }
 
-const login = async (req, res) => {
+async function login(req, res) {
     const data = req.body;
 
     let user = await User.findOne({

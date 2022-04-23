@@ -1,9 +1,8 @@
 import express from "express";
 import path from "path";
 import cookieParser from "cookie-parser";
-import jwt from "jsonwebtoken";
 import initialize from "./models/init.js";
-
+import authenticateToken from "./middleware/auth.js";
 import loginRouter from "./routes/login.js";
 import registerRouter from "./routes/register.js";
 
@@ -23,23 +22,7 @@ app.use(express.urlencoded({extended: true}));
 
 app.use(express.static(path.resolve("public")));
 
-function authenticateToken(req, res, next) {
-    const token = req.cookies.token;
-
-    if (!token) {
-        return res.status(300).redirect('/login');
-    }
-
-    try {
-        const decoded = jwt.verify(token, 'secret');
-    } catch (err) {
-        return res.status(401).send("Invalid Token");
-    }
-    
-    next();
-}
-
-app.use('(^(?!/login))(^(?!/register))', authenticateToken);
+app.use('(^(?!/login))(^(?!/register))', authenticateToken); // for all urls which don't start with /login and /register
 
 app.get('/', (req, res) => {
     res.render(path.resolve('public', 'views', 'index.pug'));
