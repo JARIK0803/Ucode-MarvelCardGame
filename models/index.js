@@ -18,13 +18,12 @@ const sequelize = new Sequelize(
     }
 );
 
-const User = initUser(sequelize, DataTypes);
+initUser(sequelize, DataTypes);
 // other models here
 
 const db = {};
 db.sequelize = sequelize;
 db.options = dbOptions;
 db.DataTypes = DataTypes;
-db.models = { User: User };
 
 export default db;
