@@ -53,8 +53,7 @@ async function register(req, res) {
     
     if (result.type === TYPE_SUCCESS) {
         const hash = bcrypt.hashSync(data.password, 10);
-        const user = await User.create({nickname: data.nickname, login: data.login, password: hash});
-        console.log(user.toJSON());
+        const user = await User.create({ nickname: data.nickname, login: data.login, password: hash });
     }
     
     res.json(result);
