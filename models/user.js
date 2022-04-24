@@ -34,6 +34,10 @@ export default function initUser (sequelize, DataTypes) {
         avatar: {
             type: DataTypes.BLOB
         }
+    },
+    {
+        createdAt: `created_at`,
+        updatedAt: `updated_at`
     });
 
 }

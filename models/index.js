@@ -2,6 +2,7 @@ import path from "path";
 import fs from "fs";
 import { Sequelize, DataTypes } from "sequelize";
 import initUser from "./user.js";
+import initCard from "./card.js";
 // more models here
 
 const dbFilePath = path.resolve("config", "db-config.json");
@@ -19,11 +20,11 @@ const sequelize = new Sequelize(
 );
 
 initUser(sequelize, DataTypes);
+initCard(sequelize, DataTypes);
 // other models here
 
 const db = {};
 db.sequelize = sequelize;
 db.options = dbOptions;
-db.DataTypes = DataTypes;
 
 export default db;
