@@ -54,9 +54,7 @@ async function login() {
     showMsg(res);
 
     if (res.hasOwnProperty('redirect')) {
-        setTimeout(() => {
-            window.location.href = res.redirect;
-        }, 1000);
+        window.location.href = res.redirect;
     }
 }
 

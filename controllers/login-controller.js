@@ -2,15 +2,14 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import db from "../models/index.js";
+import { TOKEN_EXPIRE_SEC, TOKEN_SECRET } from "../const.js";
 
 const User = db.sequelize.models.user;
 const TYPE_SUCCESS = 'success';
 const TYPE_ERROR = 'error';
-// const TOKEN_EXPIRE_SEC = 60 * 60 * 2; // 2h
-const TOKEN_EXPIRE_SEC = 10; // 10sec
 
 function generateAccessToken(payload) {
-    return jwt.sign(payload, 'secret', { expiresIn: TOKEN_EXPIRE_SEC, });
+    return jwt.sign(payload, TOKEN_SECRET, { expiresIn: TOKEN_EXPIRE_SEC, });
 }
 
 async function checkErrors(data, user) {
@@ -23,7 +22,8 @@ async function checkErrors(data, user) {
     }
 
     res.type = TYPE_SUCCESS;
-    res.text = 'You are successfully logged!';
+    res.text = '';
+    // res.text = 'You are successfully logged!';
 
     return res; 
 }

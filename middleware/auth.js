@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import { TOKEN_SECRET } from "../const.js";
 
 function authenticateToken(req, res, next) {
     const token = req.cookies.token;
@@ -8,7 +9,7 @@ function authenticateToken(req, res, next) {
     }
 
     try {
-        const decoded = jwt.verify(token, 'secret');
+        const decoded = jwt.verify(token, TOKEN_SECRET);
     } catch (err) {
         return res.status(401).send("Invalid Token");
     }
