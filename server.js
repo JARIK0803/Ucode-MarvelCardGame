@@ -5,10 +5,17 @@ import initialize from "./models/init.js";
 import authenticateToken from "./middleware/auth.js";
 import loginRouter from "./routes/login.js";
 import registerRouter from "./routes/register.js";
+import http from 'http';
 
 const app = express();
 const port = 3000;
 const host = "localhost";
+
+const server = http.createServer(app);
+import { Server } from 'socket.io';
+const io = new Server(server);
+import ioHandler from "./socket.js";
+io.on('connection', ioHandler.bind(io));
 
 initialize()
     .catch(err => console.error(err));
@@ -31,6 +38,12 @@ app.get('/', (req, res) => {
 app.use('/login', loginRouter);
 app.use('/register', registerRouter);
 
-app.listen(port, host, () => {
-    console.log(`Listening on port ${port}, with host ${host}.`);
+app.get('/waiting', (req, res) => {
+    res.render(path.resolve('public', 'views', 'waiting.pug'));
 });
+
+app.get('/game', (req, res) => {
+    res.render(path.resolve('public', 'views', 'game.pug'));
+});
+
+server.listen(port);

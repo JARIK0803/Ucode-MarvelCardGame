@@ -11,7 +11,7 @@ async function checkLogin(newLogin) {
         where: {
             login: newLogin
         }
-    });
+    }).catch(err => console.log(err));;
 
     if (res)
         return 'The user with this login already exists';
@@ -24,7 +24,7 @@ async function checkNickname(newNickname) {
         where: {
             nickname: newNickname
         }
-    });
+    }).catch(err => console.log(err));;
 
     if (res)
         return 'The user with this nickname already exists';
@@ -53,7 +53,7 @@ async function register(req, res) {
     
     if (result.type === TYPE_SUCCESS) {
         const hash = bcrypt.hashSync(data.password, 10);
-        const user = await User.create({ nickname: data.nickname, login: data.login, password: hash });
+        const user = await User.create({ nickname: data.nickname, login: data.login, password: hash }).catch(err => console.log(err));;
     }
     
     res.json(result);

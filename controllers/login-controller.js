@@ -35,14 +35,14 @@ async function login(req, res) {
         where: {
             login: data.login
         }
-    });
+    }).catch(err => console.log(err));
 
     let result = await checkErrors(data, user);
     
     if (result.type === TYPE_SUCCESS) {
         const token = generateAccessToken({ nickname: user.nickname });
         res.cookie('token', token, {maxAge: TOKEN_EXPIRE_SEC * 1000});
-        result.redirect = `/`;
+        result.redirect = `/?id=${user.id}`;
     }
 
     res.json(result);

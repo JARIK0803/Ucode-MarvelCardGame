@@ -8,3 +8,8 @@ html(lang="en")
     body 
         div Something here
         a(href="/login") login
+
+        input#startGameBtn(type="button" value="Start game")
+
+    script(src="/socket.io/socket.io.js")
+    script(src="scripts/start-game.js" type="module")
