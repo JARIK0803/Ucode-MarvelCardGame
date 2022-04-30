@@ -15,8 +15,9 @@ const sequelize = new Sequelize(
     dbOptions.password,
     {
         dialect: dbOptions.dialect,
-        pool: dbOptions.pool
-    }
+        pool: dbOptions.pool,
+        // logging: false,
+    },
 );
 
 initUser(sequelize, DataTypes);

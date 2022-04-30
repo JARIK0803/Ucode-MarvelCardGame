@@ -22,14 +22,13 @@ async function initializeCards() {
 
 export default async function initialize() {
 
-    const { user, password, host, port, database } = db.options;
-    const conn = await mysql.createConnection({ user, password, host, port });
-    await conn.query(`CREATE DATABASE IF NOT EXISTS ${database};`);
+    const { database } = db.options;
+    await db.sequelize.query(`CREATE DATABASE IF NOT EXISTS ${database};`);
 
     await db.sequelize.sync();
 
     let existsQuery = `EXISTS (SELECT * FROM ${database}.cards)`;
-    let cards = await conn.query(`SELECT ${existsQuery}`);
+    let cards = await db.sequelize.query(`SELECT ${existsQuery}`);
     
     if (!cards[0][0][existsQuery])
         await initializeCards();

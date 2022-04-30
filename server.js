@@ -10,6 +10,7 @@ import http from 'http';
 const app = express();
 const port = 3000;
 const host = "localhost";
+const viewPath = path.join("public", "views");
 
 const server = http.createServer(app);
 import { Server } from 'socket.io';
@@ -21,7 +22,7 @@ initialize()
     .catch(err => console.error(err));
 
 app.set("view engine", "pug");
-app.set("views", path.resolve("public", "views"));
+app.set("views", path.resolve(viewPath));
 
 app.use(express.json());
 app.use(cookieParser());
@@ -32,18 +33,20 @@ app.use(express.static(path.resolve("public")));
 app.use('(^(?!/login))(^(?!/register))', authenticateToken); // for all urls which don't start with /login and /register
 
 app.get('/', (req, res) => {
-    res.render(path.resolve('public', 'views', 'index.pug'));
+    res.render(path.resolve(viewPath, 'index.pug'));
 });
 
 app.use('/login', loginRouter);
 app.use('/register', registerRouter);
 
 app.get('/waiting', (req, res) => {
-    res.render(path.resolve('public', 'views', 'waiting.pug'));
+    res.render(path.resolve(viewPath, 'waiting.pug'));
 });
 
 app.get('/game', (req, res) => {
-    res.render(path.resolve('public', 'views', 'game.pug'));
+    res.render(path.resolve(viewPath, 'game.pug'));
 });
 
-server.listen(port);
+server.listen(port, host, () => {
+    console.log(`App running at port: ${port}, host: ${host}.\n`);
+});
