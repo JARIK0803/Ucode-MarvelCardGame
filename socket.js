@@ -1,4 +1,5 @@
 import Game from "./game.js";
+import Player from "./game/Player.js";
 import db from "./models/index.js";
 const User = db.sequelize.models.user;
 
@@ -67,6 +68,22 @@ async function getInfo(id) {
     return obj;
 }
 
+async function initGame(user1, user2) {
+
+    let player1 = new Player(user1);
+    let player2 = new Player(user2);
+    let players = [ player1, player2 ];
+    
+    let promises = [];
+    players.forEach(player => {
+        promises.push(player.init());
+    });
+    await Promise.all(promises);
+
+    return new Game(player1, player2);
+
+}
+
 export default function (socket) {
     var io = this;
     console.log('Connected ' + socket.id);
@@ -91,13 +108,16 @@ export default function (socket) {
             var pair = findPair(data.id);
             if (pair[2]) {
                 user.socket = socket;
-                new Game(user, pair[2]);
+                return initGame(user, pair[2]);
             }
             else {
                 user.socket = socket;
                 pair[2] = user;
+                return null;
             }
-        });
+        })
+        // .then(game => console.dir(game))
+        .catch(err => console.error(err));
     });
 
     socket.on('gameEnd', function(data) {
