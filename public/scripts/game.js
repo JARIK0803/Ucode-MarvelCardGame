@@ -36,8 +36,12 @@ sendBtn.addEventListener('click', function() {
 
 socket.emit('getInfo', {id: param.id});
 
-socket.on('getInfo', function(data) {
+socket.on('startHand', (data) => {
     console.log(data);
+})  
+
+socket.on('getInfo', function(data) {
+    // console.log(data);
     oppInfo.innerHTML = `
         <p>
             Your opponent: ${data.oppNickname}
@@ -63,7 +67,8 @@ socket.on('message', function(data) {
     
 });
 
-socket.on('turn', function() {
+socket.on('turn', (card) => {
+    console.log(card);
     msgInput.disabled = false;
     turnInfo.innerHTML = `
     <p>
