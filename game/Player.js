@@ -14,7 +14,8 @@ class Player {
     static DECK_CARD_COUNT = 10;
 
     constructor (user) {
-        
+        //перевірка чи ататкувала карта цього ходу
+        //визначити як відобоажувати: карта вже ходила, недостатньо монет для переміщення карти на стіл, максимальна кількість карт в руці, макс кількість карт на столі
         this.socket = user.socket;
         this.userID = user.id;
         this.user = null;
@@ -22,7 +23,9 @@ class Player {
         this.cardDeck = [];
         
         this.avatarHp = Player.START_AVATAR_HP;
-        this.coins = Player.START_COINS;
+
+        this.allCoins = Player.START_COINS;
+        this.currCoins = Player.START_COINS;
         
         this.hand = [];
         this.board = [];
@@ -49,7 +52,19 @@ class Player {
         
     // }
 
-    avatarReduceHp(value) {
+    startTurn() {
+        let card = [];
+        if (this.cardDeck.length)
+            card = this.getCardsToHand(1);
+
+        if (this.allCoins < Player.MAX_COINS)
+            this.allCoins++;
+        this.currCoins = this.allCoins;
+
+        return {newCardInHand: card, allCoins: this.allCoins, currCoins: this.currCoins};
+    }
+
+    reduceAvatarHp(value) {
         this.avatarHp -= value;
     }
 
@@ -62,7 +77,7 @@ class Player {
                 this.hand.push({...tmp});
                 result.push({...tmp});
             } else {
-                this.avatarReduceHp(1);
+                this.reduceAvatarHp(1);
             }
         }
 
@@ -70,15 +85,18 @@ class Player {
     }
 
     moveCardToBoard(idx) {
-        if (this.board.length <= Player.MAX_CARDS_ON_BOARD)
-            this.board.push(this.hand.splice(idx, 1));
+        if (this.board.length <= Player.MAX_CARDS_ON_BOARD && this.hand[idx].cost <= this.coins) {
+            let card = this.hand.splice(idx, 1);
+            this.board.push(card);
+            this.coins -= card.cost;
+        }
     }
 
     attackCardOnBoard(cardIdx, reduceHp) {
         const cardUnderAttack = this.board[cardIdx];
         cardUnderAttack.defense_points -= reduceHp;
 
-        if(cardUnderAttack.defense_points < 0)
+        if (cardUnderAttack.defense_points < 0)
             this.board.splice(cardIdx, 1);
     }
     

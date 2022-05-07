@@ -6,6 +6,7 @@ var timeDiv = document.getElementById('time');
 var msgInput = document.getElementById('msgInput');
 var msgDiv = document.getElementById('msgDiv');
 var sendBtn = document.getElementById('sendBtn');
+const handBlock = document.querySelector('#hand');
 
 var get = location.search;
 var param = {};
@@ -36,9 +37,24 @@ sendBtn.addEventListener('click', function() {
 
 socket.emit('getInfo', {id: param.id});
 
-socket.on('startHand', (data) => {
-    console.log(data);
-})  
+socket.on('startHand', (hand) => {
+    console.log(hand);
+    hand.forEach(card => {
+        handBlock.insertAdjacentHTML("beforeend", `
+        <div style="border: solid 1px black; display: inline-block">
+            <p>alias ${card.alias}</p>
+            <p>cost ${card.cost}</p>
+            <p>attack_points ${card.attack_points}</p>
+            <p>defense_points ${card.defense_points}</p>
+        </div>
+        `);
+    });
+});
+// alias: "Rocket"
+// attack_points: 100
+// cost: 5
+// defense_points: 80
+// id: 8
 
 socket.on('getInfo', function(data) {
     // console.log(data);
@@ -67,8 +83,19 @@ socket.on('message', function(data) {
     
 });
 
-socket.on('turn', (card) => {
-    console.log(card);
+socket.on('turn', (data) => {
+    console.log(cards);
+    data.newCardInHand.forEach(card => {
+        handBlock.insertAdjacentHTML("beforeend", `
+        <div style="border: solid 1px black; display: inline-block">
+            <p>alias ${card.alias}</p>
+            <p>cost ${card.cost}</p>
+            <p>attack_points ${card.attack_points}</p>
+            <p>defense_points ${card.defense_points}</p>
+        </div>
+        `);
+    });
+/////
     msgInput.disabled = false;
     turnInfo.innerHTML = `
     <p>
