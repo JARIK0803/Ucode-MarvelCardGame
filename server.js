@@ -5,6 +5,7 @@ import initialize from "./models/init.js";
 import authenticateToken from "./middleware/auth.js";
 import loginRouter from "./routes/login.js";
 import registerRouter from "./routes/register.js";
+import gameRouter from "./routes/game.js";
 import http from 'http';
 
 const app = express();
@@ -38,13 +39,10 @@ app.get('/', (req, res) => {
 
 app.use('/login', loginRouter);
 app.use('/register', registerRouter);
+app.use('/game', gameRouter);
 
 app.get('/waiting', (req, res) => {
     res.render(path.resolve(viewPath, 'waiting.pug'));
-});
-
-app.get('/game', (req, res) => {
-    res.render(path.resolve(viewPath, 'game.pug'));
 });
 
 server.listen(port, host, () => {

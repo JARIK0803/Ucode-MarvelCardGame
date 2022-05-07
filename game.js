@@ -1,3 +1,7 @@
+import db from "./models/index.js";
+
+const Card = db.sequelize.models.card;
+
 class Game {
     constructor(p1, p2) {
         this.playersInfo = [p1, p2];
@@ -7,8 +11,8 @@ class Game {
         var self = this;
 
         this.players.forEach((player, idx) => {
-            player.on('msg', function(data) {
-                self.onTurn(idx, data);
+            player.on('msg', async function(data) {
+                await self.onTurn(idx, data);
             });
             
             player.on('turnEnd', function() {
@@ -34,7 +38,15 @@ class Game {
         this.players[(playerIndex + 1) % 2].emit('oppTurn');
     }
 
-    onTurn(playerIndex, data) {
+    async onTurn(playerIndex, data) {
+
+        // let cardPlayed = await Card.findByPk(data.cardID, {
+        //     attributes: {
+        //         exclude: ["created_at", "updated_at"]
+        //     }
+        // });
+        // console.dir(cardPlayed.dataValues);
+        // this.turn.move = JSON.stringify(cardPlayed.dataValues);
         this.turn.msg = data.msg;
         this.turn.playerIndex = playerIndex;
 

@@ -22,8 +22,9 @@ async function initializeCards() {
 
 export default async function initialize() {
 
-    const { database } = db.options;
-    await db.sequelize.query(`CREATE DATABASE IF NOT EXISTS ${database};`);
+    const { host, user, password, database } = db.options;
+    const conn = await mysql.createConnection({ host: host, user: user, password: password });
+    await conn.query(`CREATE DATABASE IF NOT EXISTS ${database};`);
 
     await db.sequelize.sync();
 

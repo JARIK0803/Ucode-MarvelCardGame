@@ -28,7 +28,7 @@ sendBtn.addEventListener('click', function() {
         msgInput.value = '';
         socket.emit('msg', {
             id: param.id,
-            msg: msg
+            cardID: msg
         });
         clearTimeout(timerId);
     }
@@ -90,3 +90,10 @@ socket.on('oppTurn', function() {
         Your opponent's turn
     </p>`;
 });
+
+// For initializing a Game instance
+
+// import Game from "./game/Game.js";
+// 
+// new Game();
+// 
