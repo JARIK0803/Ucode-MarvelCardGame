@@ -85,7 +85,7 @@ socket.on('message', function(data) {
 
 socket.on('turn', (data) => {
     console.log(cards);
-    data.newCardInHand.forEach(card => {
+    data.newCardsInHand.forEach(card => {
         handBlock.insertAdjacentHTML("beforeend", `
         <div style="border: solid 1px black; display: inline-block">
             <p>alias ${card.alias}</p>

@@ -61,7 +61,7 @@ class Player {
             this.allCoins++;
         this.currCoins = this.allCoins;
 
-        return {newCardInHand: card, allCoins: this.allCoins, currCoins: this.currCoins};
+        return {newCardsInHand: card, allCoins: this.allCoins, currCoins: this.currCoins};
     }
 
     reduceAvatarHp(value) {
@@ -90,6 +90,12 @@ class Player {
             this.board.push(card);
             this.coins -= card.cost;
         }
+
+        // let a = {
+        //     startCardStats: '',
+        //     currCardStats: '',
+        //     active: false
+        // }
     }
 
     attackCardOnBoard(cardIdx, reduceHp) {
