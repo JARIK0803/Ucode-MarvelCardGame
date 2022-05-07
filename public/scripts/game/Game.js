@@ -68,14 +68,14 @@ class Game {
     initLoader() {
 
         const body = document.querySelector(".game-container")
-        body.style.display = "none";
+        body.style.visibility = "hidden";
         const loader = document.querySelector(".loader-container");
         loader.style.visibility = "visible";
         document.onreadystatechange = () => {
             if (document.readyState === "complete") {
-                loader.style.display = "none";
+                loader.style.visibility = "hidden";
                 loader.style.animation = "none";
-                body.style.display = "block";
+                body.style.visibility = "visible";
                 this.init();
             }
         };

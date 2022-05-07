@@ -5,14 +5,20 @@ html(lang="en")
         meta(http-equiv="X-UA-Compatible", content="IE=edge")
         meta(name="viewport", content="width=device-width, initial-scale=1.0")
         title Authorization
-        link(rel="stylesheet", href="styles/login.css")
+        link(rel="stylesheet", href="styles/form.css")
     body 
-        h1 Authorization
-        form(class="form" id="form")
-            input(id="login" name="login" type="text" placeholder="Login" required)
-            input(id="password" name="password" type="password" placeholder="Password" required)
-            button(type="submit") login
-        div.notify
-        a(href="/register")  create an account
+        .form-container.login-container
+            .form-container--inner
+                .form-header.form-item
+                    span.form-header--text Authorization
+                form.form.form-item(id="form")
+                    input.form-input(id="login" name="login" type="text" placeholder="Login" required)
+                    input.form-input(id="password" name="password" type="password" placeholder="Password" required)
+                    button.btn.form-submit-btn(type="submit") Login
+                .notify-container.form-item
+                    span.notify
+                .link-container.form-item
+                    span.link-label Not registered?
+                    a.link-text(href="/register") Create an account
 
         script(src="scripts/login.js")
