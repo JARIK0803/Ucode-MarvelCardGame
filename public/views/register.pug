@@ -5,16 +5,21 @@ html(lang="en")
         meta(http-equiv="X-UA-Compatible", content="IE=edge")
         meta(name="viewport", content="width=device-width, initial-scale=1.0")
         title Registration
-        link(rel="stylesheet", href="styles/login.css")
+        link(rel="stylesheet", href="styles/form.css")
     body 
-        h1 Registration
-        form(class="form" id="form")
-            input(name="nickname" type="text" placeholder="nickname")
-            input(name="login" type="text" placeholder="Login")
-            input(id="password" name="password" type="password" placeholder="Password")
-            input(id="repassword" name="repassword" type="password" placeholder="Repeat password")
-            button(type="submit") Register
-        div.notify
-        a(href="/login") login
+        .form-container.login-container
+            .form-container--inner
+                .form-header.form-item
+                    span.form-header--text Registration
+                form.form.form-item(id="form")
+                    input.form-input(name="nickname" type="text" placeholder="Nickname")
+                    input.form-input(name="login" type="text" placeholder="Login")
+                    input.form-input(id="password" name="password" type="password" placeholder="Password")
+                    input.form-input(id="repassword" name="repassword" type="password" placeholder="Repeat password")
+                    button.btn.form-submit-btn(type="submit") Register
+                .notify.form-item
+                .link-container.form-item
+                    span.link-label Have an account?
+                    a.link-text(href="/login") Login
 
         script(src="scripts/register.js") 
