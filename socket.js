@@ -1,4 +1,4 @@
-import Game from "./game.js";
+import Game from "./game/Game.js";
 import Player from "./game/Player.js";
 import db from "./models/index.js";
 const User = db.sequelize.models.user;
