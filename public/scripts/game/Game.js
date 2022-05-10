@@ -1,5 +1,5 @@
 import Card from "./Card.js";
-import Field from "./Field.js";
+import Board from "./Board.js";
 import HiddenCard from "./HiddenCard.js";
 
 class Game {
@@ -8,14 +8,14 @@ class Game {
     constructor(socket) {
 
         this.socket = socket;
-
         this.field = null;
         
-        // preferably save players' data to this instance
-
-        // this.initLoader();
+        this.timerId = null;
+        
         this.setGameEvents();
+        this.setBtnEvents();
         this.init();
+
     }
 
     setGameEvents() {
@@ -23,7 +23,7 @@ class Game {
         this.socket.on('initPlayersData', (playersData) => {
             playersData = JSON.parse(playersData);
 
-            this.field = new Field({...playersData.player, socket: this.socket});
+            this.field = new Board({...playersData.player, socket: this.socket});
 
             this.displayPlayer(playersData.player, true);
             this.displayPlayer(playersData.opponent, false);
@@ -46,24 +46,64 @@ class Game {
         });
 
         this.socket.on('turn', (data) => {
+            this.setPlayerTurn();
+            
             this.field.player.hand.push(data.newCard);
             this.updateCards(data.newCard);
             this.field.player.mana = data.currMana;
-            this.field.updateManaBy();
+            this.field.updateMana();
 
-            let count = 10;
-            let timerId = setInterval(() => {
-                if (count === 0) {
-                    this.socket.emit('turnEnd');
-                    clearTimeout(timerId);
-                }
-                count--;
-            }, 1000);
         });
 
         this.socket.on('oppTurn', (oppHand) => {
+            this.setOppTurn();
+            console.log("opp turn")
             this.updateOpponentCards(oppHand);
         });
+
+    }
+
+    setPlayerTurn() {
+
+        this.field.player.turn = true;
+        console.log("player turn")
+        const btn = document.querySelector(".turn-submit-btn");
+        btn.disabled = false;
+        let count = 10;
+        const timerText = document.querySelector(".turn-time > .turn-timer");
+        this.timerId = setInterval(() => {
+            let countText = count < 10 ? `0${count}` : `${count}`;
+            if (count <= 0) {
+                clearTimeout(this.timerId);
+                this.socket.emit('turnEnd');
+            }
+            timerText.textContent = `00:${countText}`;
+            count--;
+        }, 1000);        
+
+    }
+
+    setOppTurn() {
+
+        this.field.player.turn = false;
+        const timerText = document.querySelector(".turn-time > .turn-timer");
+        timerText.textContent = `Opponent's turn`;
+        clearTimeout(this.timerId);
+        const btn = document.querySelector(".turn-submit-btn");
+        btn.disabled = true;
+
+    }
+
+    setBtnEvents() {
+
+        const turnBtn = document.querySelector(".turn-submit-btn");
+        turnBtn.addEventListener("click", () => {
+            console.log("turn end")
+            this.socket.emit("turnEnd");
+        });
+
+        // const giveupBtn = document.querySelector(".giveup-btn");
+        // giveupBtn.addEventListener("click", this.socket.emit("")); // 'give up' event here
 
     }
 
@@ -114,23 +154,6 @@ class Game {
 
         let img = document.querySelector(`#player-${player.id} .player-avatar > img`);
         img.setAttribute("src", `${Game.assetsDir}/${player.avatar}`);
-
-    }
-
-    initLoader() {
-
-        const body = document.querySelector(".game-container")
-        body.style.visibility = "hidden";
-        const loader = document.querySelector(".loader-container");
-        loader.style.visibility = "visible";
-        document.onreadystatechange = () => {
-            if (document.readyState === "complete") {
-                loader.style.visibility = "hidden";
-                loader.style.animation = "none";
-                body.style.visibility = "visible";
-                this.init();
-            }
-        };
 
     }
 

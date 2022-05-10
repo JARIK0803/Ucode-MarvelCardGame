@@ -22,6 +22,11 @@ export default function initCard(sequelize, DataTypes) {
         cost: {
             type: DataTypes.INTEGER,
             allowNull: false
+        },
+        img: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            unique: true
         }
     },
     {

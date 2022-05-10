@@ -1,13 +1,16 @@
-.loader-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(var(--bg-primary), 1);
+@import "_base.css";
+
+.waiting-text {
+    font-size: 30px;
+    font-weight: 600;
+    color: rgba(var(--color-white), 1);
+    text-shadow: var(--shadow-text);
+    text-align: center;
+    user-select: none;
 }
 
 .loader {
+    margin-top: 30px;
     width: 140px;
     height: 140px;
     position: relative;

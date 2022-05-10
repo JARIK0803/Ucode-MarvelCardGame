@@ -64,7 +64,7 @@
     text-shadow: var(--shadow-text);
 }
 
-.turn-time > .time-text {
+.turn-time > .turn-timer {
     opacity: .7;
     font-weight: 500;
 }

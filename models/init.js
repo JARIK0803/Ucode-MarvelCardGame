@@ -6,16 +6,16 @@ const Card = db.sequelize.models.card;
 async function initializeCards() {
 
     await Card.bulkCreate([
-        { alias: "Thor", attack_points: 150, defense_points: 100, cost: 1 },
-        { alias: "Iron Man", attack_points: 130, defense_points: 90, cost: 1 },
-        { alias: "Spider Man", attack_points: 140, defense_points: 80, cost: 1 },
-        { alias: "Thanos", attack_points: 100, defense_points: 90, cost: 1 },
-        { alias: "Captain America", attack_points: 130, defense_points: 100, cost: 1 },
-        { alias: "Black Widow", attack_points: 120, defense_points: 90, cost: 1 },
-        { alias: "Hulk", attack_points: 130, defense_points: 120, cost: 1 },
-        { alias: "Rocket", attack_points: 100, defense_points: 80, cost: 1 },
-        { alias: "Gamora", attack_points: 130, defense_points: 90, cost: 1 },
-        { alias: "Superman", attack_points: 100, defense_points: 110, cost: 1 },
+        { alias: "Thor", attack_points: 150, defense_points: 100, cost: 1, img: "thor.jpg" },
+        { alias: "Iron Man", attack_points: 130, defense_points: 90, cost: 1, img: "ironman.jpg" },
+        { alias: "Spider Man", attack_points: 140, defense_points: 80, cost: 1, img: "spiderman.png" },
+        { alias: "Thanos", attack_points: 100, defense_points: 90, cost: 1, img: "thanos.jpg" },
+        { alias: "Captain America", attack_points: 130, defense_points: 100, cost: 1, img: "cptn_america.jpg" },
+        { alias: "Wonder Woman", attack_points: 120, defense_points: 90, cost: 1, img: "wonder_woman.png" },
+        { alias: "Hulk", attack_points: 130, defense_points: 120, cost: 1, img: "hulk.jpg" },
+        { alias: "Rocket", attack_points: 100, defense_points: 80, cost: 1, img: "rocket.jpg" },
+        { alias: "Venom", attack_points: 130, defense_points: 90, cost: 1, img: "venom.png" },
+        { alias: "Gamora", attack_points: 100, defense_points: 110, cost: 1, img: "gamora.jpg" },
     ]);
 
 }

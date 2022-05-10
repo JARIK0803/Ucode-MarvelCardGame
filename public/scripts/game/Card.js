@@ -1,6 +1,6 @@
 class Card {
 
-    static assetsDir = "assets";
+    static assetsDir = "assets/cards";
     static cardCount = 0;
     constructor (cardData, field) {
 
@@ -48,7 +48,7 @@ class Card {
         defense.textContent = this.cardData.defense_points;
         
         let img = document.querySelector(`#${this.cardID} .card-img > img`);
-        img.setAttribute("src", `${Card.assetsDir}/${this.cardData.imgName}`);
+        img.setAttribute("src", `${Card.assetsDir}/${this.cardData.img}`);
 
         this.cardHTML.classList.add("revealed");
 
@@ -68,7 +68,9 @@ class Card {
     
     makeCardMove() {
     
-        // submit a card move
+        if (!this.field.player.turn)
+            return;
+
         this.field.addPlayerCard(this);
     
     }

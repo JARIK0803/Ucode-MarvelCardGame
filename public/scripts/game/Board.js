@@ -1,6 +1,6 @@
 import Card from "./Card.js";
 
-class Field {
+class Board {
 
     constructor(player) {
 
@@ -8,7 +8,7 @@ class Field {
         this.selectedAttacker = null;
         this.selectedTarget = null;
         this.cards = [];
-        this.updateManaBy(this.player.mana);
+        this.updateMana(this.player.mana);
     
     }
 
@@ -104,11 +104,11 @@ class Field {
         this.cards.push(card.cardData);
         // socket event here
         this.player.mana -= card.cardData.cost;
-        this.updateManaBy();
+        this.updateMana();
 
     }
 
-    updateManaBy() {
+    updateMana() {
 
         const manaCount = document.querySelector(".mana-count");
         let currentMana = this.player.mana;
@@ -120,4 +120,4 @@ class Field {
 
 }
 
-export default Field;
+export default Board;

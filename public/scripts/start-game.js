@@ -13,8 +13,7 @@ if (get !== '') {
     }
 }
 
-const startGameBtn = document.getElementById('startGameBtn');
-
+const startGameBtn = document.querySelector(".start-menu > button");
 if (startGameBtn) {
     startGameBtn.addEventListener('click', function () {
         socket.emit('startGame', {id: param.id});
