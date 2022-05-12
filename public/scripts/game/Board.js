@@ -8,8 +8,44 @@ class Board {
         this.selectedAttacker = null;
         this.selectedTarget = null;
         this.cards = [];
+        this.oppCards = [];
         this.updateMana(this.player.mana);
+        this.setBoardEvents();
     
+    }
+
+    setBoardEvents() {
+
+        this.player.socket.on('clickCard', (cardId, isTarget, attackerId) => {
+            let card = this.findCardById(cardId, isTarget);
+
+            if (isTarget) {
+                let attacker = this.findCardById(attackerId, false);
+
+                card.cardHTML.classList.add("target-card");
+
+                setTimeout(() => {
+                    attacker.cardHTML.classList.remove("attacker-card");
+                    card.cardHTML.classList.remove("target-card");
+                }, 3000);
+            }
+            else {
+                card.cardHTML.classList.add("attacker-card");
+            }
+        });
+
+    }
+
+    findCardById(id, isYours) {
+
+        let cardArr = isYours ? this.cards : this.oppCards;
+
+        let card = cardArr.find((card) => {
+            return card.cardData.id === id;
+        });
+
+        return card;
+
     }
 
     attackInProgress() {
@@ -60,6 +96,7 @@ class Board {
                 // this.clearTarget();
                 this.selectedTarget = card;
                 card.cardHTML.classList.add("target-card");
+                this.player.socket.emit("clickCard", card.cardData.id, true, this.selectedAttacker.cardData.id);
                 console.log(`${this.selectedAttacker.cardData.alias}'s attacking
                             ${this.selectedTarget.cardData.alias}`);
 
@@ -71,6 +108,8 @@ class Board {
             }
 
         });
+
+        this.oppCards.push(card);
 
         const oppCards = document.querySelector(`.opponent-container .card-container`);
         oppCards.removeChild(oppCards.lastChild);
@@ -92,6 +131,7 @@ class Board {
             this.clearAttacker();
             this.selectedAttacker = card;
             card.cardHTML.classList.add("attacker-card");
+            this.player.socket.emit("clickCard", card.cardData.id, false);
 
         });
 
@@ -101,20 +141,46 @@ class Board {
 
         cardContainer.appendChild(card.cardHTML);
         card.clearCardEvents();
-        this.cards.push(card.cardData);
+        this.cards.push(card);
         // socket event here
         this.player.mana -= card.cardData.cost;
         this.updateMana();
 
     }
 
-    updateMana() {
-
+    updateMana(newTurn = false) {
+        
         const manaCount = document.querySelector(".mana-count");
         let currentMana = this.player.mana;
-        manaCount.textContent = `${currentMana}/10`;
+        let allMana;
+        if (newTurn) {
+            allMana = this.player.mana;
+        }
+        else {
+            if (manaCount.textContent) {
+                allMana = manaCount.textContent.split('/')[1];
+            }
+            else {
+                allMana = 0;
+            }
+        }
+        manaCount.textContent = `${currentMana}/${allMana}`;
         const manaBar = document.querySelector(".mana-progress-bar");
         manaBar.style.width = `${currentMana * 10}%`;
+
+    }
+
+    clearChosenCards() {
+
+        this.cards.forEach((card) => {
+            card.cardHTML.classList.remove("attacker-card");
+            card.cardHTML.classList.remove("target-card");
+        });
+
+        this.oppCards.forEach((card) => {
+            card.cardHTML.classList.remove("attacker-card");
+            card.cardHTML.classList.remove("target-card");
+        });
 
     }
 
