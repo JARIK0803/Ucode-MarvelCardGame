@@ -37,6 +37,10 @@ class Game {
                 console.log('opponent.board')
                 console.log(opponent.board)
             });
+
+            player.socket.on('clickCard', (cardId, isTarget, attackerId) => {
+                opponent.socket.emit('clickCard', cardId, isTarget, attackerId);
+            });
             
             player.socket.on('turnEnd', () => {
                 this.turns((idx + 1) % 2);

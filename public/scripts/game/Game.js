@@ -51,7 +51,7 @@ class Game {
             this.field.player.hand.push(data.newCard);
             this.updateCards(data.newCard);
             this.field.player.mana = data.currMana;
-            this.field.updateMana();
+            this.field.updateMana(true);
 
         });
 
@@ -77,7 +77,8 @@ class Game {
             }
             timerText.textContent = `00:${countText}`;
             count--;
-        }, 1000);        
+        }, 1000);
+        this.field.clearChosenCards();        
 
     }
 
@@ -89,6 +90,7 @@ class Game {
         clearTimeout(this.timerId);
         const btn = document.querySelector(".turn-submit-btn");
         btn.disabled = true;
+        this.field.clearChosenCards();
 
     }
 
