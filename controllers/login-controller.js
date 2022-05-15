@@ -41,7 +41,7 @@ async function login(req, res) {
     
     if (result.type === TYPE_SUCCESS) {
         const token = generateAccessToken({ nickname: user.nickname });
-        res.cookie('token', token, {maxAge: TOKEN_EXPIRE_SEC * 1000});
+        res.cookie('token', token, {sameSite: 'Lax', maxAge: TOKEN_EXPIRE_SEC * 1000,}); //default sameSite: 'None', secure: true
         result.redirect = `/?id=${user.id}`;
     }
 
