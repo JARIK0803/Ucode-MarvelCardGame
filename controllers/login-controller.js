@@ -40,7 +40,7 @@ async function login(req, res) {
     let result = await checkErrors(data, user);
     
     if (result.type === TYPE_SUCCESS) {
-        const token = generateAccessToken({ nickname: user.nickname });
+        const token = generateAccessToken({ id: user.id, nickname: user.nickname });
         res.cookie('token', token, {maxAge: TOKEN_EXPIRE_SEC * 1000});
         result.redirect = `/?id=${user.id}`;
     }

@@ -83,6 +83,10 @@ body {
     user-select: none;
 }
 
+.form-header--text.text-sm {
+    font-size: 24px;
+}
+
 .form-submit-btn {
     width: 100%;
     background-color: rgba(var(--bg-featured), .8);
@@ -106,4 +110,8 @@ body {
     opacity: 1;
     color: rgba(var(--bg-featured), 1);
     transition: all .3s ease;
+}
+
+.avatar-form-container {
+    margin-top: 20px;
 }

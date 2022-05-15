@@ -5,6 +5,7 @@ import initialize from "./models/init.js";
 import authenticateToken from "./middleware/auth.js";
 import loginRouter from "./routes/login.js";
 import registerRouter from "./routes/register.js";
+import uploadRouter from "./routes/avatar-upload.js";
 import gameRouter from "./routes/game.js";
 import http from 'http';
 
@@ -37,6 +38,7 @@ app.get('/', (req, res) => {
     res.render(path.resolve(viewPath, 'index.pug'));
 });
 
+app.use('/', uploadRouter);
 app.use('/login', loginRouter);
 app.use('/register', registerRouter);
 app.use('/game', gameRouter);

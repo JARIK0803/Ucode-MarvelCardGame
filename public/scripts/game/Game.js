@@ -57,7 +57,6 @@ class Game {
 
         this.socket.on('oppTurn', (oppHand) => {
             this.setOppTurn();
-            console.log("opp turn")
             this.updateOpponentCards(oppHand);
         });
 
@@ -66,7 +65,6 @@ class Game {
     setPlayerTurn() {
 
         this.field.player.turn = true;
-        console.log("player turn")
         const btn = document.querySelector(".turn-submit-btn");
         btn.disabled = false;
         let count = 10;
@@ -98,7 +96,6 @@ class Game {
 
         const turnBtn = document.querySelector(".turn-submit-btn");
         turnBtn.addEventListener("click", () => {
-            console.log("turn end")
             this.socket.emit("turnEnd");
         });
 
@@ -153,7 +150,7 @@ class Game {
         nickname.textContent = player.nickname;
 
         let img = document.querySelector(`#player-${player.id} .player-avatar > img`);
-        img.setAttribute("src", `${Game.assetsDir}/${player.avatar}`);
+        img.src = `data:image/jpeg;base64,${player.avatar}`;
 
     }
 

@@ -1,3 +1,5 @@
+import { showMsg, sendUserData } from "./sender-utils.js";
+
 function getData() {
     const form = document.querySelector("#form");
 
@@ -9,47 +11,9 @@ function getData() {
     return data;
 }
 
-async function sendUserData(userData) {
-    let res = await fetch("/login", {
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(userData)
-    });
-
-    let data = await res.json();
-
-    return data;
-}
-
-function setStyleMsg (notify, type) {
-    switch (type) {
-        case 'error':
-            notify.classList.remove('notify--success');
-            notify.classList.add('notify--error');
-            break;
-
-        case 'success':
-            notify.classList.remove('notify--error');
-            notify.classList.add('notify--success');
-            break;
-    
-        default:
-            break;
-    }
-}
-
-function showMsg(data) {
-    let notify = document.querySelector('.notify');
-    notify.textContent = data.text;
-    setStyleMsg(notify, data.type);
-}
-
 async function login() {
     let data = getData();
-    let res = await sendUserData(data);
+    let res = await sendUserData(data, "/login");
 
     showMsg(res);
 

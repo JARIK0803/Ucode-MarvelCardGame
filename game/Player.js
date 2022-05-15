@@ -39,7 +39,12 @@ class Player {
         try {
             let user = await User.findByPk(this.userID);
             this.nickname = user.nickname;
-            this.avatar = user.avatar;
+            if (user.avatar) {
+                this.avatar = Buffer.from(user.avatar, "binary").toString("base64");
+            } else {
+                this.avatar = null;
+            } 
+
             await this.initDeck();        
         }
         catch (err) {
