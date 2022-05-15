@@ -24,10 +24,10 @@ class Board {
 
                 card.cardHTML.classList.add("target-card");
 
-                setTimeout(() => {
+                // setTimeout(() => {
                     attacker.cardHTML.classList.remove("attacker-card");
                     card.cardHTML.classList.remove("target-card");
-                }, 3000);
+                // }, 3000);
             }
             else {
                 card.cardHTML.classList.add("attacker-card");
@@ -79,9 +79,35 @@ class Board {
 
     }
 
+    removeFromDOM (cardEl, seconds) {
+    
+        cardEl.style.transition = `all ${seconds}s ease`;
+        cardEl.style.transform = `scale(0.8)`;
+        cardEl.style.opacity = 0;
+    
+        setTimeout(() => {
+            
+            cardEl.remove();
+        
+        }, seconds * 1000);
+    
+    }
+
+    removeCard(toRemove, isYours) {
+
+        let filterCard = card => card.cardData.id !== toRemove.cardData.id;
+        if (isYours) {
+            this.cards = this.cards.filter(filterCard);
+        } else {
+            this.oppCards = this.oppCards.filter(filterCard);
+        }
+        this.removeFromDOM(toRemove.cardHTML, 0.6);
+
+    }
+
     addOpponentCard(cardData) {
 
-        let card = new Card(cardData, this);
+        let card = new Card(cardData, this, true);
         card.render(`.game-field .opponent-field`, true);
         card.fillCardData();
         card.cardHTML.classList.add("enemy-card", "played");

@@ -1,10 +1,10 @@
-.player-card--outer {
+/* .player-card--outer {
     display: inline-flex;
     flex-direction: column;
     align-items: flex-start;
-}
+} */
 
-.player-card {
+.card {
     display: inline-flex;
     flex-flow: column nowrap;
     align-items: flex-start;
@@ -19,23 +19,23 @@
     transition: all .5s ease;
 }
 
-.player-card.player-card.revealed {
+.card.revealed {
     cursor: pointer;
 }
 
-.player-card:not(:first-child) {
+.card:not(:first-child) {
     margin-left: calc(-1 * (130px - 80px));
 }
 
-.player-card.played {
+.card.played {
     margin: 10px;
 }
 
-.player-card > div:not(:first-child) {
+.card > div:not(:first-child) {
     margin-top: 3px;
 }
 
-.player-card.revealed > .card-header {
+.card.revealed > .card-header {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -53,7 +53,7 @@
     user-select: none;
 }
 
-.player-card.revealed > .card-footer {
+.card.revealed > .card-footer {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -61,8 +61,8 @@
     margin-top: 10px;
 }
 
-.player-card.revealed .card-attack,
-.player-card.revealed .card-defense {
+.card.revealed .card-attack,
+.card.revealed .card-defense {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -76,24 +76,24 @@
 }
 
 
-.player-card.revealed .card-attack {
+.card.revealed .card-attack {
     margin: 0 0 -10px -14px;
     background-color: rgba(var(--color-attack), 1);
 }
 
-.player-card.revealed .card-defense {
+.card.revealed .card-defense {
     margin: 0 -14px -10px 0;
     background-color: rgba(var(--color-defense), 1);
 }
 
-.player-card > .card-body {
+.card > .card-body {
     width: 100%;
     display: flex;
     flex-flow: column nowrap;
     align-items: flex-start;
 }
 
-.player-card.revealed .card-alias {
+.card.revealed .card-alias {
     width: 100%;
     font-size: 14px;
     line-height: 1;
@@ -103,12 +103,12 @@
     user-select: none;
 }
 
-.player-card.hidden .card-img {
+.card.hidden .card-img {
     width: 100%;
     height: 100%;
 }
 
-.player-card.revealed .card-img {
+.card.revealed .card-img {
     width: 90px;
     height: 120px;
     margin: 5px auto 0;
@@ -118,7 +118,7 @@
     overflow: hidden;
 }
 
-.player-card .card-img > img {
+.card .card-img > img {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -126,24 +126,24 @@
     pointer-events: none;
 }
 
-.player-card.revealed:hover {
+.card.revealed:hover {
     transform: translate(-55px, -20px);
     transition: all .5s ease;
 }
 
-.player-card.player-card.revealed:last-child:hover {
+.card.revealed:last-child:hover {
     transform: translateY(-20px);
 }
 
-.player-card.revealed.played:hover {
+.card.revealed.played:hover {
     transform: translateY(-20px);
     transition: all .5s ease;
 }
 
-.player-card.attacker-card {
+.card.attacker-card {
     box-shadow: 0 0 20px 0 rgba(var(--color-attack), 1);
 }
 
-.player-card.target-card {
+.card.target-card {
     box-shadow: 0 0 20px 0 rgba(var(--color-defense), 1);
 }

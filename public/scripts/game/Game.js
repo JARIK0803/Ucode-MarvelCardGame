@@ -31,23 +31,35 @@ class Game {
             this.renderDeckCardsFor("opponent");
 
             this.updateCards(playersData.player.hand);
-            this.updateOpponentCards(playersData.opponent.hand);
+            this.updateOpponentCards(playersData.opponent.hand.length);
         })
 
         this.socket.on('oppMoveCardToBoard', (oppCard) => {
             this.field.addOpponentCard(oppCard);
         });
 
-        this.socket.on('attackCard', (palyerCard, opponentCard) => {
-            console.log('palyerCard');
-            console.log(palyerCard);
-            console.log('opponentCard');
-            console.log(opponentCard);
+        this.socket.on('attackCard', (target, attacker) => {
+
+            let targetCard = this.field.findCardById(target.id, true);
+            let attackerCard = this.field.findCardById(attacker.id, false);
+
+            if (target.defense_points <= 0) {
+                this.field.removeCard(targetCard, true);
+            } else {
+                targetCard.updateCardData(target);
+            }
+            
+            if (attacker.defense_points <= 0) {
+                this.field.removeCard(attackerCard, false);
+            } else {
+                attackerCard.updateCardData(attacker);
+            }
+
         });
 
         this.socket.on('turn', (data) => {
             this.setPlayerTurn();
-            
+
             this.field.player.hand.push(data.newCard);
             this.updateCards(data.newCard);
             this.field.player.mana = data.currMana;
@@ -108,17 +120,19 @@ class Game {
 
     updateCards(cards) {
 
-        cards.forEach(card => new Card(card, this.field)
+        cards.forEach(card => new Card(card, this.field, false)
             .render(".player-container .card-container"));
         
     }
     
-    updateOpponentCards(cards) {
+    updateOpponentCards(cardCount) {
         
-        cards.forEach(card => new HiddenCard(
-            "enemy-card",
-            ".opponent-container .card-container"
-        ));
+        for (let i = 0; i < cardCount; ++i) {
+            new HiddenCard(
+                "enemy-card",
+                ".opponent-container .card-container"
+            );
+        }
 
     }
 

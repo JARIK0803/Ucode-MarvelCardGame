@@ -1,15 +1,27 @@
 class Card {
 
     static assetsDir = "assets/cards";
-    static cardCount = 0;
-    constructor (cardData, field) {
+    constructor (cardData, field, isOppCard) {
 
         this.field = field;
         this.cardData = cardData;
-        this.cardID = `card-${Card.cardCount++}`;
+        this.cardID = `card-${cardData.id}`;
         this.cardHTML = null;
+        this.isOppCard = isOppCard;
         this.onClickHandler = this.makeCardMove.bind(this);
         
+    }
+
+    updateCardData(cardData) {
+
+        let defense = document.querySelector(`#${this.cardID} .card-defense > span`);
+        defense.textContent = cardData.defense_points;
+        this.cardData.defense_points = cardData.defense_points;
+        
+        let attack = document.querySelector(`#${this.cardID} .card-attack > span`);
+        attack.textContent = cardData.attack_points;
+        this.cardData.attack_points = cardData.attack_points;
+
     }
 
     clearCardEvents() {
@@ -60,6 +72,12 @@ class Card {
         const template = document.getElementById("card-template");
         this.cardHTML = template.content.firstElementChild.cloneNode(true);
         this.cardHTML.setAttribute("id", this.cardID);
+        
+        if (this.isOppCard)
+            this.cardHTML.classList.add("enemy-card");
+        else 
+            this.cardHTML.classList.add("player-card");
+
         cardContainer.appendChild(this.cardHTML);
 
         this.fillCardData();
