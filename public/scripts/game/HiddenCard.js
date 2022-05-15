@@ -10,7 +10,7 @@ class HiddenCard {
         
     }
     
-    addDeckCardText() {
+    setDeckCardEvent(socket, event) {
 
         this.card.insertAdjacentHTML("beforeend", 
             `<span class="deck-card-count"></span>`
@@ -18,10 +18,12 @@ class HiddenCard {
         const cardCountSpan = document.querySelector(`#${this.cardID} .deck-card-count`);
         this.card.addEventListener("mouseenter", () => {
 
-            // socket event to get the count
-            const count = 5;
-            cardCountSpan.textContent = `${count} cards left`;
-            cardCountSpan.classList.remove("hidden");
+            socket.emit(event);
+            socket.on(event, (cardCount) => {
+                const text = cardCount === 1 ? "card" : "cards";
+                cardCountSpan.textContent = `${cardCount} ${text} left`;
+                cardCountSpan.classList.remove("hidden");
+            })
 
         });
         this.card.addEventListener("mouseleave", () => {

@@ -2,11 +2,7 @@
     display: flex;
     width: 100vw;
     height: 100vh;
-    background-color: rgba(var(--bg-primary), 1); 
-    /* background: url("../assets/player-bg.jpg");
-    background-repeat: no-repeat;
-    background-size: cover;
-    box-shadow: inset 2000px 0 0 0 rgba(60, 59, 78, 0.9);  */
+    background-color: rgba(var(--bg-primary), 1);
 }
 
 .game-container--inner {

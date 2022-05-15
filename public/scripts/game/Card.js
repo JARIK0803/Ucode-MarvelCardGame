@@ -1,11 +1,12 @@
 class Card {
 
     static assetsDir = "assets/cards";
+    static cardCount = 0;
     constructor (cardData, field, isOppCard) {
 
         this.field = field;
         this.cardData = cardData;
-        this.cardID = `card-${cardData.id}`;
+        this.cardID = `card-${Card.cardCount++}`;
         this.cardHTML = null;
         this.isOppCard = isOppCard;
         this.onClickHandler = this.makeCardMove.bind(this);

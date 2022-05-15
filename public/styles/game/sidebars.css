@@ -19,16 +19,11 @@
     transition: all .3s ease;
 }
 
-.player-deck-card:hover {
+.player-deck-card:hover,
+.opponent-deck-card:hover {
     background-color: rgba(var(--bg-tertiary), .5);
     box-shadow: 0px 0px 20px 0px rgba(var(--bg-tertiary), .5);;
     transition: all .3s ease;
-}
-
-.player-deck-card.disabled,
-.opponent-deck-card {
-    background-color: rgba(var(--bg-tertiary), .6);
-    pointer-events: none;
 }
 
 .deck-card-count {

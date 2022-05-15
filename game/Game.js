@@ -45,6 +45,16 @@ class Game {
             player.socket.on('turnEnd', () => {
                 this.turns((idx + 1) % 2);
             });
+
+            player.socket.on('playerDeckSize', () => {
+                let cardCount = player.cardDeck.length;
+                player.socket.emit('playerDeckSize', cardCount);
+            });
+
+            player.socket.on('opponentDeckSize', () => {
+                let cardCount = opponent.cardDeck.length;
+                player.socket.emit('opponentDeckSize', cardCount);
+            });
         });
     }
 

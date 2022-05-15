@@ -1,9 +1,3 @@
-/* .player-card--outer {
-    display: inline-flex;
-    flex-direction: column;
-    align-items: flex-start;
-} */
-
 .card {
     display: inline-flex;
     flex-flow: column nowrap;

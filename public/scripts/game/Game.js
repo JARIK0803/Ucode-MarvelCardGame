@@ -143,9 +143,7 @@ class Game {
             cardClass,
             `.turn-container .${playerClass}-deck`
         );
-        if (playerClass === "player") {
-            card.addDeckCardText();
-        }
+        card.setDeckCardEvent(this.socket, `${playerClass}DeckSize`);
 
     }
 
