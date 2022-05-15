@@ -58,6 +58,10 @@ body {
     margin-top: 20px;
 }
 
+.btn.left-20 {
+    margin-left: 20px;
+}
+
 /* Universal link styling */
 
 .link-container > .link-label,
@@ -78,4 +82,10 @@ body {
 
 .hidden {
     display: none;
+}
+
+.start-container {
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
 }

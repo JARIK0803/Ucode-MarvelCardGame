@@ -32,7 +32,7 @@ export default function initUser (sequelize, DataTypes) {
             // }
         },
         avatar: {
-            type: DataTypes.BLOB
+            type: DataTypes.BLOB("long")
         }
     },
     {

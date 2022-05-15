@@ -88,10 +88,11 @@ class Board {
 
         card.cardHTML.addEventListener("click", () => {
 
-            if (this.attackInProgress())
+            if (this.attackInProgress() || !this.player.turn)
                 return;
 
             if (this.selectedAttacker) {
+
 
                 // this.clearTarget();
                 this.selectedTarget = card;
@@ -100,7 +101,6 @@ class Board {
                 console.log(`${this.selectedAttacker.cardData.alias}'s attacking
                             ${this.selectedTarget.cardData.alias}`);
 
-                // submit the attack
                 this.player.socket.emit("attackCard", this.selectedAttacker.cardData.id, this.selectedTarget.cardData.id);
 
                 this.clearAttack();
@@ -125,7 +125,7 @@ class Board {
         card.cardHTML.classList.add("played");
         card.cardHTML.addEventListener("click", () => {
 
-            if (this.attackInProgress())
+            if (this.attackInProgress() || !this.player.turn)
                 return;
 
             this.clearAttacker();
@@ -142,7 +142,6 @@ class Board {
         cardContainer.appendChild(card.cardHTML);
         card.clearCardEvents();
         this.cards.push(card);
-        // socket event here
         this.player.mana -= card.cardData.cost;
         this.updateMana();
 

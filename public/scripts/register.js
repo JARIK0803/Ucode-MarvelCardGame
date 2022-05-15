@@ -1,3 +1,5 @@
+import { showMsg, sendUserData } from "./sender-utils.js";
+
 function validateLogin(login) {
     if (login.length < 4) 
         return 'The login length must be at least 4 symbols';
@@ -72,50 +74,12 @@ function getData() {
     return data;
 }
 
-async function sendUserData(userData) {
-    let res = await fetch("/register", {
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(userData)
-    });
-
-    let data = await res.json();
-
-    return data;
-}
-
-function setStyleMsg (notify, type) {
-    switch (type) {
-        case 'error':
-            notify.classList.remove('notify--success');
-            notify.classList.add('notify--error');
-            break;
-
-        case 'success':
-            notify.classList.remove('notify--error');
-            notify.classList.add('notify--success');
-            break;
-    
-        default:
-            break;
-    }
-}
-
-function showMsg(data) {
-    let notify = document.querySelector('.notify');
-    notify.textContent = data.text;
-    setStyleMsg(notify, data.type);
-}
-
 async function register() {
     let data = getData();
     let result = validateData(data);
 
     if (result.type !== 'error')
-        result = await sendUserData(data);
+        result = await sendUserData(data, "/register");
     
     showMsg(result);
 }
