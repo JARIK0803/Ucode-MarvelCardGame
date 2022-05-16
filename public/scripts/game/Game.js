@@ -31,7 +31,7 @@ class Game {
             this.renderDeckCardsFor("opponent");
 
             this.updateCards(playersData.player.hand);
-            this.updateOpponentCards(playersData.opponent.hand.length);
+            this.updateOpponentCards(playersData.opponent.handLength);
         })
 
         this.socket.on('oppMoveCardToBoard', (oppCard) => {
@@ -67,9 +67,9 @@ class Game {
 
         });
 
-        this.socket.on('oppTurn', (oppHand) => {
+        this.socket.on('oppTurn', (numOfNewCards) => {
             this.setOppTurn();
-            this.updateOpponentCards(oppHand);
+            this.updateOpponentCards(numOfNewCards);
         });
 
     }

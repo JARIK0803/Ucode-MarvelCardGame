@@ -68,7 +68,7 @@ class Game {
 
             player.socket.emit('initPlayersData', JSON.stringify({
                 "player": {nickname: player.nickname, hand: player.hand, avatar: player.avatar, health: player.hp, mana: player.currMana},
-                "opponent": {nickname: opponent.nickname, hand: opponent.hand, avatar: opponent.avatar, health: opponent.hp}
+                "opponent": {nickname: opponent.nickname, handLength: opponent.hand.length, avatar: opponent.avatar, health: opponent.hp}
             }));
             
         });
@@ -90,7 +90,7 @@ class Game {
         let data = player.startTurn();
         
         player.socket.emit('turn', data);
-        opponent.socket.emit('oppTurn', data.newCard);
+        opponent.socket.emit('oppTurn', data.newCard.length);
     }
 
     // sendToPlayer(playerIndex, msg) {
