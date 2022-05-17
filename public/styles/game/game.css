@@ -111,3 +111,25 @@
         transform: rotate(360deg);
     }
 } */
+
+.gameover {
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(var(--bg-primary), 0.8);
+    z-index: 2;
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    justify-content: center;
+}
+
+.gameover p {
+    text-align: center;
+    color: rgba(var(--bg-featured), 1);
+    font-size: 70px;   
+}
+
+[hidden] {
+    display: none;
+}

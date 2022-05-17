@@ -2,13 +2,15 @@ import Card from "./Card.js";
 
 class Board {
 
-    constructor(player) {
+    constructor(player, playerHTMLEl, opponentHTMLEl) {
 
         this.player = player;
         this.selectedAttacker = null;
         this.selectedTarget = null;
         this.cards = [];
         this.oppCards = [];
+        this.playerHTMLEl = playerHTMLEl;
+        this.opponentHTMLEl = opponentHTMLEl;
         this.updateMana(this.player.mana);
         this.setBoardEvents();
     
@@ -17,21 +19,26 @@ class Board {
     setBoardEvents() {
 
         this.player.socket.on('clickCard', (cardId, isTarget, attackerId) => {
-            let card = this.findCardById(cardId, isTarget);
+            let obj = { cardHTML: this.playerHTMLEl.avatar };
+            let card = cardId === -1 ? obj : this.findCardById(cardId, isTarget);
 
             if (isTarget) {
                 let attacker = this.findCardById(attackerId, false);
 
                 card.cardHTML.classList.add("target-card");
 
-                // setTimeout(() => {
+                setTimeout(() => {
                     attacker.cardHTML.classList.remove("attacker-card");
                     card.cardHTML.classList.remove("target-card");
-                // }, 3000);
+                }, 3000);
             }
             else {
                 card.cardHTML.classList.add("attacker-card");
             }
+        });
+
+        this.opponentHTMLEl.template.addEventListener("click", () => {
+            this.playerClick();
         });
 
     }
@@ -206,6 +213,27 @@ class Board {
             card.cardHTML.classList.remove("attacker-card");
             card.cardHTML.classList.remove("target-card");
         });
+
+        this.playerHTMLEl.avatar.classList.remove("target-card");
+        this.opponentHTMLEl.avatar.classList.remove("target-card");
+
+    }
+
+    playerClick() {
+
+        if (this.attackInProgress() || !this.player.turn)
+            return;
+
+        if (this.selectedAttacker) {
+
+            var card = { cardHTML: this.opponentHTMLEl.avatar };
+            this.selectedTarget = card;
+            card.cardHTML.classList.add("target-card");
+            this.player.socket.emit("clickCard", -1, true, this.selectedAttacker.cardData.id);
+            this.player.socket.emit("attackOpponent", this.selectedAttacker.cardData.id);
+            this.clearAttack();
+
+        }
 
     }
 

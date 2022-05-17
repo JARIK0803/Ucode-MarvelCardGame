@@ -5,7 +5,7 @@ const Card = db.sequelize.models.card;
 class Game {
     constructor(p1, p2) {
         this.players = [p1, p2];
-        this.turn = {};
+        // this.turn = {};
 
         this.#setPlayersEvents();
         this.#startGame();
@@ -34,10 +34,21 @@ class Game {
                 player.socket.emit('attackCard', attacker, target);
                 opponent.socket.emit('attackCard', target, attacker);
 
-                // console.log('player.board');
-                // console.log(player.board);
-                // console.log('opponent.board');
-                // console.log(opponent.board);
+                console.log('player.board');
+                console.log(player.board);
+                console.log('opponent.board');
+                console.log(opponent.board);
+            });
+
+            player.socket.on('attackOpponent', (attackerId) => {
+                let attacker = player.board.find(elem => elem.id === attackerId);
+
+                opponent.reduceHp(attacker.attack_points);
+
+                opponent.socket.emit('updatePlayerHp', opponent.hp);
+                player.oppSocket.emit('updateOppHp', opponent.hp);
+
+                this.checkGameOver();
             });
 
             player.socket.on('clickCard', (cardId, isTarget, attackerId) => {
@@ -45,7 +56,6 @@ class Game {
             });
             
             player.socket.on('turnEnd', () => {
-                // this.turns((idx + 1) % 2);
                 this.startTurn((idx + 1) % 2);
             });
 
@@ -60,7 +70,8 @@ class Game {
             });
 
             player.socket.on('giveUp', () => {
-                this.gameOver(opponent, player);
+                player.socket.emit('gameOver', false);
+                opponent.socket.emit('gameOver', true);
             })
         });
     }
@@ -80,34 +91,23 @@ class Game {
             
         });
 
-        // this.turns(goesFirstIdx);
         this.startTurn(goesFirstIdx);
     }
 
     getCardsToHand(playerIdx, numOfCards) {
         const player = this.players[playerIdx];
         const opponent = this.players[(playerIdx + 1) % 2];
-        // let result = [];
 
         for (let i = 0; i < numOfCards; i++) {
-            if (!player.cardDeck.length) {
-                player.fatigue();
-                player.socket.emit('updatePlayerHp', player.hp);
-                opponent.socket.emit('updateOppHp', player.hp);
-                this.checkGameOver();
-                continue;
-            }
 
             let card = player.drawCard();
 
             if (card) {
                 player.socket.emit('updateCards', [card]);
                 opponent.socket.emit('updateOppCards', [card].length);
-                // result.push(card);
             }
+            this.checkGameOver();
         }
-
-        // return result;
     }
 
     #getStartCards(goesFirstIdx) {
@@ -134,16 +134,6 @@ class Game {
         player.replenishMana();
     }
 
-    // turns(playerIndex) {
-    //     const player =  this.players[playerIndex];
-    //     const opponent = this.players[(playerIndex + 1) % 2];
-
-    //     let data = player.startTurn();
-        
-    //     player.socket.emit('turn', data);
-    //     opponent.socket.emit('oppTurn', data.newCard.length);
-    // }
-
     checkGameOver() {
         if (this.players[0].hp <= 0) {
             this.gameOver(this.players[1], this.players[0]);
@@ -155,8 +145,8 @@ class Game {
     }
 
     gameOver(winner, loser) {
-        winner.socket.emit('gameOver', 'Winner');
-        loser.socket.emit('gameOver', 'Loser');
+        winner.socket.emit('gameOver', true);
+        loser.socket.emit('gameOver', false);
     }
 }
 

@@ -75,3 +75,7 @@
     transform: scale(1.1);
     transition: all .3s ease;
 }
+
+.target-card {
+    box-shadow: 0 0 20px 0 rgba(var(--color-defense), 1);
+}

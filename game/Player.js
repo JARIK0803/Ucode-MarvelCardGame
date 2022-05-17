@@ -11,11 +11,13 @@ class Player {
     static MAX_CARDS_IN_HAND = 7;
     static MAX_CARDS_ON_BOARD = 5;
 
-    constructor (user) {
+    constructor (user, oppSocket) {
         //перевірка чи атакувала карта цього ходу
         //визначити як відобоажувати: карта вже ходила, макс кількість карт на столі
         this.socket = user.socket;
         this.userID = user.id;
+
+        this.oppSocket = oppSocket;
         
         this.nickname = '';
         this.avatar = '';
@@ -58,6 +60,8 @@ class Player {
 
     reduceHp(value) {
         this.hp -= value;
+        this.socket.emit('updatePlayerHp', this.hp);
+        this.oppSocket.emit('updateOppHp', this.hp);
     }
 
     fatigue() {
@@ -66,16 +70,12 @@ class Player {
         this.socket.emit('warning', `The cards in your deck are over, you get ${this.fatigueDamage} damage!`,);
     }
 
-    // startTurn() {
-    //     let cards = this.getCardsToHand(1);
-
-    //     this.replenishMana();
-
-    //     return {newCard: cards, allMana: this.allMana, currMana: this.currMana};
-    // }
-
     drawCard() {
-        
+        if (!this.cardDeck.length) {
+            this.fatigue();
+            return null;
+        }
+
         if (this.hand.length >= Player.MAX_CARDS_IN_HAND) {
             this.cardDeck.pop();
             this.socket.emit('warning', `The maximum amount of cards in hand is ${Player.MAX_CARDS_IN_HAND}`);

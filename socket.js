@@ -70,8 +70,8 @@ async function getInfo(id) {
 
 async function initGame(user1, user2) {
 
-    let player1 = new Player(user1);
-    let player2 = new Player(user2);
+    let player1 = new Player(user1, user2.socket);
+    let player2 = new Player(user2, user1.socket);
     let players = [ player1, player2 ];
     
     let promises = [];
@@ -116,7 +116,7 @@ export default function (socket) {
                 return null;
             }
         })
-        // .then(game => console.dir(game))
+        // .then(game => {})
         .catch(err => console.error(err));
     });
 

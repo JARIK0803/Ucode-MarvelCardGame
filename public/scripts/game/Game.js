@@ -22,11 +22,14 @@ class Game {
 
         this.socket.on('initPlayersData', (playersData) => {
             playersData = JSON.parse(playersData);
+            
+            // this.field = new Board({...playersData.player, socket: this.socket});
 
-            this.field = new Board({...playersData.player, socket: this.socket});
+            let playerHTMLEl = this.displayPlayer(playersData.player, true);
+            let opponentHTMLEl = this.displayPlayer(playersData.opponent, false);
 
-            this.displayPlayer(playersData.player, true);
-            this.displayPlayer(playersData.opponent, false);
+            this.field = new Board({...playersData.player, socket: this.socket}, playerHTMLEl, opponentHTMLEl);
+
             this.renderDeckCardsFor("player");
             this.renderDeckCardsFor("opponent");
 
@@ -66,12 +69,13 @@ class Game {
             this.updateOpponentCards(numOfNewCards);
         });
 
-        this.socket.on('updatePlayerHp', (hp) => {
-            console.log('palyerHP: ' + hp); //edit
+        this.socket.on('updatePlayerHp', (userHp) => {
+            this.field.player.health = userHp;
+            this.field.playerHTMLEl.health.textContent = userHp;
         });
 
         this.socket.on('updateOppHp', (oppHp) => {
-            console.log('opponentHP: ' + oppHp); //edit
+            this.field.opponentHTMLEl.health.textContent = oppHp;
         });
         
         this.socket.on('replenishMana', (mana) => {
@@ -91,16 +95,25 @@ class Game {
             this.setOppTurn();
         });
 
-        this.socket.on('gameOver', (data) => {
-            alert(data); //edit
-
-            if (data === 'Winner') {
-                socket.emit('gameOver', {id: this.field.player.userID});
-            }
-            // if (data === 'Winner' || data === 'Loser') {
-                // window.location.href = `/?id=${this.field.player.userID}`;
-            // }
+        this.socket.on('gameOver', (isWinner) => {
+            var gameover = document.querySelector(".gameover");
+            gameover.hidden = false;
             
+            if (isWinner) {
+                console.log('winner');
+                document.querySelector(".gameover .gameover-text").innerHTML = 'win';
+            }
+            else {
+                console.log('loser');
+                document.querySelector(".gameover .gameover-text").innerHTML = 'lose';
+            }
+
+            // this.socket.emit('gameOver', {id: this.field.player.userID}); // socket.js
+        });
+
+        document.querySelector(".gameover").addEventListener("click", () => {
+            let url = new URL(window.location.href);
+            window.location.href = `/${url.search}`;
         });
     }
 
@@ -195,6 +208,8 @@ class Game {
 
         let img = document.querySelector(`#player-${player.id} .player-avatar > img`);
         img.src = `data:image/jpeg;base64,${player.avatar}`;
+
+        return { template: playerClone, health: health, avatar: document.querySelector(`#player-${player.id} .player-avatar`) };
 
     }
 
