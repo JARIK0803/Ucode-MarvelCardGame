@@ -8,18 +8,14 @@ class Player {
     static START_HP = 30;
     static MAX_MANA = 10;
     static START_MANA = 0;
-    static MAX_CARDS_IN_HAND = 8;
+    static MAX_CARDS_IN_HAND = 7;
     static MAX_CARDS_ON_BOARD = 5;
 
-    static DECK_CARD_COUNT = 10;
-
     constructor (user) {
-        //перевірка чи ататкувала карта цього ходу
-        //визначити як відобоажувати: карта вже ходила, недостатньо монет для переміщення карти на стіл, максимальна кількість карт в руці, макс кількість карт на столі
+        //перевірка чи атакувала карта цього ходу
+        //визначити як відобоажувати: карта вже ходила, макс кількість карт на столі
         this.socket = user.socket;
         this.userID = user.id;
-
-        this.user = null;
         
         this.nickname = '';
         this.avatar = '';
@@ -31,7 +27,7 @@ class Player {
         this.hp = Player.START_HP;
         this.allMana = Player.START_MANA;
         this.currMana = Player.START_MANA;
-        
+        this.fatigueDamage = 0;
     }
     
     async init() {
@@ -53,56 +49,66 @@ class Player {
 
     }
 
-    // getRandomCards(cards, num) {
-        
-    //     let allCards = [ ...cards, ...cards ];
-    //     const shuffled = allCards.sort(() => 0.5 - Math.random());
-    //     return shuffled.slice(0, num);
-        
-    // }
-
-    startTurn() {
-        let cards = [];
-        if (this.cardDeck.length)
-            cards = this.getCardsToHand(1);
-
+    replenishMana() {
         if (this.allMana < Player.MAX_MANA)
             this.allMana++;
         this.currMana = this.allMana;
-
-        return {newCard: cards, allMana: this.allMana, currMana: this.currMana};
+        this.socket.emit('replenishMana', this.allMana);
     }
 
     reduceHp(value) {
         this.hp -= value;
     }
 
-    getCardsToHand(numOfCards) {
-        let result = [];
+    fatigue() {
+        this.fatigueDamage++;
+        this.reduceHp(this.fatigueDamage);
+        this.socket.emit('warning', `The cards in your deck are over, you get ${this.fatigueDamage} damage!`,);
+    }
 
-        for (let i = 0; i < numOfCards; i++) {
-            if (this.cardDeck.length && this.hand.length <= Player.MAX_CARDS_IN_HAND) {
-                let card = this.cardDeck.pop();
-                this.hand.push(card);
-                result.push(card);
-            } else {
-                this.reduceHp(1);
-            }
+    // startTurn() {
+    //     let cards = this.getCardsToHand(1);
+
+    //     this.replenishMana();
+
+    //     return {newCard: cards, allMana: this.allMana, currMana: this.currMana};
+    // }
+
+    drawCard() {
+        
+        if (this.hand.length >= Player.MAX_CARDS_IN_HAND) {
+            this.cardDeck.pop();
+            this.socket.emit('warning', `The maximum amount of cards in hand is ${Player.MAX_CARDS_IN_HAND}`);
+            return null;
         }
 
-        return result;
+        let card = this.cardDeck.pop();
+        this.hand.push(card);
+
+        return card;
     }
 
     moveCardToBoard(cardId) {
         let idx = this.hand.findIndex(elem => elem.id === cardId);
 
-        if (this.board.length <= Player.MAX_CARDS_ON_BOARD && this.hand[idx].cost <= this.currMana) {
+        if (this.board.length >= Player.MAX_CARDS_ON_BOARD) {
+            this.socket.emit('warning', `You can have a maximum of ${Player.MAX_CARDS_ON_BOARD} cards on the board at once!`);
+            return false;
+        }
+
+        if (this.hand[idx].cost > this.currMana) {
+            this.socket.emit('warning', `Not enough mana!`);
+            return false;
+        }
+
+        // if (this.board.length <= Player.MAX_CARDS_ON_BOARD && this.hand[idx].cost <= this.currMana) {
             let card = this.hand.splice(idx, 1)[0];
             this.board.push(card);
             this.currMana -= card.cost;
+
             return true;
-        }
-        return false;
+        // }
+        // return false;
         // let a = {
         //     startCardStats: '',
         //     currCardStats: '',
@@ -127,9 +133,7 @@ class Player {
             }
         });
 
-        // this.cardDeck = this.getRandomCards(cards, Player.DECK_CARD_COUNT)
-        //     .map(card => card.dataValues);
-        this.cardDeck = [...cards, ...cards].map((card, idx) => {
+        this.cardDeck = [...cards].map((card, idx) => {
             let cardData = card.dataValues;
             cardData.id = idx; //set unique id for all cards in deck
             return {...cardData};

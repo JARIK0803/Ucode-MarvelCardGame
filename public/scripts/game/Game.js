@@ -57,21 +57,51 @@ class Game {
 
         });
 
-        this.socket.on('turn', (data) => {
-            this.setPlayerTurn();
-
-            this.field.player.hand.push(data.newCard);
-            this.updateCards(data.newCard);
-            this.field.player.mana = data.currMana;
-            this.field.updateMana(true);
-
+        this.socket.on('updateCards', (newCard) => {
+            this.field.player.hand.push(newCard[0]);
+            this.updateCards(newCard);
         });
 
-        this.socket.on('oppTurn', (numOfNewCards) => {
-            this.setOppTurn();
+        this.socket.on('updateOppCards', (numOfNewCards) => {
             this.updateOpponentCards(numOfNewCards);
         });
 
+        this.socket.on('updatePlayerHp', (hp) => {
+            console.log('palyerHP: ' + hp); //edit
+        });
+
+        this.socket.on('updateOppHp', (oppHp) => {
+            console.log('opponentHP: ' + oppHp); //edit
+        });
+        
+        this.socket.on('replenishMana', (mana) => {
+            this.field.player.mana = mana;
+            this.field.updateMana(true);
+        });
+
+        this.socket.on('warning', (msg) => {
+            console.log(msg); //edit
+        });
+
+        this.socket.on('turn', () => {
+            this.setPlayerTurn();
+        });
+
+        this.socket.on('oppTurn', () => {
+            this.setOppTurn();
+        });
+
+        this.socket.on('gameOver', (data) => {
+            alert(data); //edit
+
+            if (data === 'Winner') {
+                socket.emit('gameOver', {id: this.field.player.userID});
+            }
+            // if (data === 'Winner' || data === 'Loser') {
+                // window.location.href = `/?id=${this.field.player.userID}`;
+            // }
+            
+        });
     }
 
     setPlayerTurn() {
@@ -113,8 +143,8 @@ class Game {
             this.socket.emit("turnEnd");
         });
 
-        // const giveupBtn = document.querySelector(".giveup-btn");
-        // giveupBtn.addEventListener("click", this.socket.emit("")); // 'give up' event here
+        const giveupBtn = document.querySelector(".giveup-btn");
+        giveupBtn.addEventListener("click", () => this.socket.emit("giveUp")); // 'give up' event here
 
     }
 

@@ -120,7 +120,7 @@ export default function (socket) {
         .catch(err => console.error(err));
     });
 
-    socket.on('gameEnd', function(data) {
+    socket.on('gameOver', function(data) {
         pairs = pairs.filter(pair => pair[0] !== data.id && pair[1] !== data.id);
     });
 
