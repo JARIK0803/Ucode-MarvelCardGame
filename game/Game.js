@@ -38,6 +38,15 @@ class Game {
                 console.log(opponent.board)
             });
 
+            player.socket.on('attackOpponent', (attackerId) => {
+                let attacker = player.board.find(elem => elem.id === attackerId);
+
+                opponent.reduceHp(attacker.attack_points);
+
+                player.socket.emit('attackUser', opponent.hp, false);
+                opponent.socket.emit('attackUser', opponent.hp, true);
+            });
+
             player.socket.on('clickCard', (cardId, isTarget, attackerId) => {
                 opponent.socket.emit('clickCard', cardId, isTarget, attackerId);
             });

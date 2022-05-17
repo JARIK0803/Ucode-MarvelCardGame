@@ -13,11 +13,13 @@ class Player {
 
     static DECK_CARD_COUNT = 10;
 
-    constructor (user) {
+    constructor (user, oppSocket) {
         //перевірка чи ататкувала карта цього ходу
         //визначити як відобоажувати: карта вже ходила, недостатньо монет для переміщення карти на стіл, максимальна кількість карт в руці, макс кількість карт на столі
         this.socket = user.socket;
         this.userID = user.id;
+
+        this.oppSocket = oppSocket;
 
         this.user = null;
         
@@ -63,7 +65,7 @@ class Player {
 
     startTurn() {
         let cards = [];
-        if (this.cardDeck.length)
+        // if (this.cardDeck.length)
             cards = this.getCardsToHand(1);
 
         if (this.allMana < Player.MAX_MANA)
@@ -75,6 +77,17 @@ class Player {
 
     reduceHp(value) {
         this.hp -= value;
+        this.socket.emit('attackUser', this.hp, true);
+        this.oppSocket.emit('attackUser', this.hp, false);
+
+        this.checkEnd();
+    }
+
+    checkEnd() {
+        if (this.hp <= 0) {
+            this.socket.emit('gameOver', false);
+            this.oppSocket.emit('gameOver', true);
+        }
     }
 
     getCardsToHand(numOfCards) {

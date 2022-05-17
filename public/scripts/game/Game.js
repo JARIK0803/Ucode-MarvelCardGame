@@ -22,11 +22,14 @@ class Game {
 
         this.socket.on('initPlayersData', (playersData) => {
             playersData = JSON.parse(playersData);
+            
+            // this.field = new Board({...playersData.player, socket: this.socket});
 
-            this.field = new Board({...playersData.player, socket: this.socket});
+            let playerHTMLEl = this.displayPlayer(playersData.player, true);
+            let opponentHTMLEl = this.displayPlayer(playersData.opponent, false);
 
-            this.displayPlayer(playersData.player, true);
-            this.displayPlayer(playersData.opponent, false);
+            this.field = new Board({...playersData.player, socket: this.socket}, playerHTMLEl, opponentHTMLEl);
+
             this.renderDeckCardsFor("player");
             this.renderDeckCardsFor("opponent");
 
@@ -57,6 +60,16 @@ class Game {
 
         });
 
+        this.socket.on('attackUser', (userHp, isYou) => {
+            if (isYou) {
+                this.field.player.health = userHp;
+                this.field.playerHTMLEl.health.textContent = userHp;
+            }
+            else {
+                this.field.opponentHTMLEl.health.textContent = userHp;
+            }
+        });
+
         this.socket.on('turn', (data) => {
             this.setPlayerTurn();
 
@@ -69,7 +82,26 @@ class Game {
 
         this.socket.on('oppTurn', (oppHand) => {
             this.setOppTurn();
-            this.updateOpponentCards(oppHand);
+            this.updateOpponentCards(oppHand.length);
+        });
+
+        this.socket.on('gameOver', (isWinner) => {
+            var gameover = document.querySelector(".gameover");
+            gameover.hidden = false;
+
+            if (isWinner) {
+                console.log('winner');
+                document.querySelector(".gameover .gameover-text").innerHTML = 'win';
+            }
+            else {
+                console.log('loser');
+                document.querySelector(".gameover .gameover-text").innerHTML = 'lose';
+            }
+        });
+
+        document.querySelector(".gameover").addEventListener("click", () => {
+            let url = new URL(window.location.href);
+            window.location.href = `/${url.search}`;
         });
 
     }
@@ -165,6 +197,8 @@ class Game {
 
         let img = document.querySelector(`#player-${player.id} .player-avatar > img`);
         img.src = `data:image/jpeg;base64,${player.avatar}`;
+
+        return { template: playerClone, health: health, avatar: document.querySelector(`#player-${player.id} .player-avatar`) };
 
     }
 
