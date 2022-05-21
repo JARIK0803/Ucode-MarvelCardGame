@@ -171,7 +171,7 @@ class Game {
         });
 
         const giveupBtn = document.querySelector(".giveup-btn");
-        giveupBtn.addEventListener("click", () => this.socket.emit("giveUp")); // 'give up' event here
+        giveupBtn.addEventListener("click", () => this.socket.emit("giveUp"));
 
     }
 

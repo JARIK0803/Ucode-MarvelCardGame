@@ -49,8 +49,12 @@ class Game {
                 this.checkGameOver();
             });
 
-            player.socket.on('clickCard', (cardId, isTarget, attackerId) => {
-                opponent.socket.emit('clickCard', cardId, isTarget, attackerId);
+            player.socket.on('selectCard', (cardId, isTarget, attackerId) => {
+                opponent.socket.emit('selectCard', cardId, isTarget, attackerId);
+            });
+
+            player.socket.on('unselectCard', (cardId) => {
+                opponent.socket.emit('unselectCard', cardId);
             });
             
             player.socket.on('turnEnd', () => {

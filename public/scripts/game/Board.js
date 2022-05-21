@@ -29,6 +29,7 @@ class Board {
                 const attackClass = "attacker-card";
                 if (card.cardHTML.classList.contains(attackClass)) {
                     card.cardHTML.classList.remove(attackClass);
+                    this.clearAttacker();
                     return;
                 }
                 if (this.attackInProgress() || !this.player.turn)
@@ -50,7 +51,7 @@ class Board {
 
         });
 
-        this.player.socket.on('clickCard', (cardId, isTarget, attackerId) => {
+        this.player.socket.on('selectCard', (cardId, isTarget, attackerId) => {
             let obj = { cardHTML: this.playerHTMLEl.avatar };
             let card = cardId === -1 ? obj : this.findCardById(cardId, isTarget);
 
@@ -67,6 +68,11 @@ class Board {
             else {
                 card.cardHTML.classList.add("attacker-card");
             }
+        });
+
+        this.player.socket.on('unselectCard', (cardId) => {
+            let card = this.findCardById(cardId, false);
+            card.cardHTML.classList.remove("attacker-card");
         });
 
         this.opponentHTMLEl.template.addEventListener("click", () => {
@@ -97,6 +103,7 @@ class Board {
         
         if (!this.selectedAttacker) return;
         this.selectedAttacker.cardHTML.classList.remove("attacker-card");
+        this.player.socket.emit("unclickCard", this.selectedAttacker.cardData.id);
         this.selectedAttacker = null;
         
     }
@@ -160,9 +167,6 @@ class Board {
                 this.selectedTarget = card;
                 card.cardHTML.classList.add("target-card");
                 this.player.socket.emit("clickCard", card.cardData.id, true, this.selectedAttacker.cardData.id);
-                console.log(`${this.selectedAttacker.cardData.alias}'s attacking
-                            ${this.selectedTarget.cardData.alias}`);
-
                 this.player.socket.emit("attackCard", this.selectedAttacker.cardData.id, this.selectedTarget.cardData.id);
 
                 this.clearAttack();
