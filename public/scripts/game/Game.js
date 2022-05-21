@@ -33,6 +33,7 @@ class Game {
             this.renderDeckCardsFor("player");
             this.renderDeckCardsFor("opponent");
 
+            this.field.player.hand = [];
             this.updateCards(playersData.player.hand);
             this.updateOpponentCards(playersData.opponent.handLength);
         })
@@ -61,7 +62,6 @@ class Game {
         });
 
         this.socket.on('updateCards', (newCard) => {
-            this.field.player.hand.push(newCard[0]);
             this.updateCards(newCard);
         });
 
@@ -84,7 +84,20 @@ class Game {
         });
 
         this.socket.on('warning', (msg) => {
-            console.log(msg); //edit
+            
+            let overlay = document.querySelector(".overlay");
+            let overlayHeading = document.querySelector(".overlay .overlay-heading");
+            let overlayText = document.querySelector(".overlay .overlay-text");
+            overlay.hidden = false;
+            overlayHeading.textContent = "Warning";
+            overlayText.textContent = msg;
+            
+            setTimeout(() => {
+                overlay.hidden = true;
+                overlayHeading.textContent = "";
+                overlayText.textContent = "";
+            }, 2000);
+
         });
 
         this.socket.on('turn', () => {
@@ -96,25 +109,26 @@ class Game {
         });
 
         this.socket.on('gameOver', (isWinner) => {
-            var gameover = document.querySelector(".gameover");
+            var gameover = document.querySelector(".overlay");
             gameover.hidden = false;
+            document.querySelector(".overlay .overlay-heading").textContent = "Game over";
             
             if (isWinner) {
                 console.log('winner');
-                document.querySelector(".gameover .gameover-text").innerHTML = 'win';
+                document.querySelector(".overlay .overlay-text").textContent = "You win";
             }
             else {
                 console.log('loser');
-                document.querySelector(".gameover .gameover-text").innerHTML = 'lose';
+                document.querySelector(".overlay .overlay-text").textContent = "You lose";
             }
+            document.querySelector(".overlay").addEventListener("click", () => {
+                let url = new URL(window.location.href);
+                window.location.href = `/${url.search}`;
+            });
 
             // this.socket.emit('gameOver', {id: this.field.player.userID}); // socket.js
         });
 
-        document.querySelector(".gameover").addEventListener("click", () => {
-            let url = new URL(window.location.href);
-            window.location.href = `/${url.search}`;
-        });
     }
 
     setPlayerTurn() {
@@ -127,7 +141,7 @@ class Game {
         this.timerId = setInterval(() => {
             let countText = count < 10 ? `0${count}` : `${count}`;
             if (count <= 0) {
-                clearTimeout(this.timerId);
+                clearInterval(this.timerId);
                 this.socket.emit('turnEnd');
             }
             timerText.textContent = `00:${countText}`;
@@ -163,8 +177,11 @@ class Game {
 
     updateCards(cards) {
 
-        cards.forEach(card => new Card(card, this.field, false)
-            .render(".player-container .card-container"));
+        cards.forEach(card => {
+            let newCard = new Card(card, this.field, false);
+            this.field.player.hand.push(newCard);
+            newCard.render(".player-container .card-container");
+        });
         
     }
     

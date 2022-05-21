@@ -18,6 +18,38 @@ class Board {
 
     setBoardEvents() {
 
+        this.player.socket.on('moveCardToBoard', (cardID) => {
+
+            const cardContainer = document.querySelector(`.game-field .player-field`);
+            let idx = this.player.hand.findIndex(elem => elem.cardData.id === cardID);
+            const card = this.player.hand[idx];
+            card.cardHTML.classList.add("played");
+            card.cardHTML.addEventListener("click", () => {
+                
+                const attackClass = "attacker-card";
+                if (card.cardHTML.classList.contains(attackClass)) {
+                    card.cardHTML.classList.remove(attackClass);
+                    return;
+                }
+                if (this.attackInProgress() || !this.player.turn)
+                    return;
+    
+                this.clearAttacker();
+                this.selectedAttacker = card;
+                card.cardHTML.classList.add(attackClass);
+                this.player.socket.emit("clickCard", card.cardData.id, false);
+    
+            });
+            
+            cardContainer.appendChild(card.cardHTML);
+            card.clearCardEvents();
+            this.cards.push(card);
+            this.player.mana -= card.cardData.cost;
+            this.player.hand.splice(idx, 1);
+            this.updateMana();
+
+        });
+
         this.player.socket.on('clickCard', (cardId, isTarget, attackerId) => {
             let obj = { cardHTML: this.playerHTMLEl.avatar };
             let card = cardId === -1 ? obj : this.findCardById(cardId, isTarget);
@@ -125,9 +157,6 @@ class Board {
                 return;
 
             if (this.selectedAttacker) {
-
-
-                // this.clearTarget();
                 this.selectedTarget = card;
                 card.cardHTML.classList.add("target-card");
                 this.player.socket.emit("clickCard", card.cardData.id, true, this.selectedAttacker.cardData.id);
@@ -137,7 +166,6 @@ class Board {
                 this.player.socket.emit("attackCard", this.selectedAttacker.cardData.id, this.selectedTarget.cardData.id);
 
                 this.clearAttack();
-
             }
 
         });
@@ -150,33 +178,8 @@ class Board {
     }
 
     addPlayerCard(card) {
-
-        if (this.player.mana - card.cardData.cost < 0)
-            return;
-
-        const cardContainer = document.querySelector(`.game-field .player-field`);
-        card.cardHTML.classList.add("played");
-        card.cardHTML.addEventListener("click", () => {
-
-            if (this.attackInProgress() || !this.player.turn)
-                return;
-
-            this.clearAttacker();
-            this.selectedAttacker = card;
-            card.cardHTML.classList.add("attacker-card");
-            this.player.socket.emit("clickCard", card.cardData.id, false);
-
-        });
-
-        let idx = this.player.hand.findIndex(elem => elem.id === card.cardData.id);
-        this.player.hand.splice(idx, 1);
+        
         this.player.socket.emit("moveCardToBoard", card.cardData.id);
-
-        cardContainer.appendChild(card.cardHTML);
-        card.clearCardEvents();
-        this.cards.push(card);
-        this.player.mana -= card.cardData.cost;
-        this.updateMana();
 
     }
 

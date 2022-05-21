@@ -17,11 +17,9 @@ class Game {
 
             player.socket.on('moveCardToBoard', (cardId) => {
                 if (player.moveCardToBoard(cardId)) {
-                    // player.socket.emit('moveCardToBoard', cardId);
+                    player.socket.emit('moveCardToBoard', cardId);
                     opponent.socket.emit('oppMoveCardToBoard', player.board[player.board.length - 1]);
                 }
-                
-                // player.socket.emit('moveCardToBoard', player.board); // replace player.board to some flag
             });
 
             player.socket.on('attackCard', (attackerId, targetId) => {
