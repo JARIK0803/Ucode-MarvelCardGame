@@ -109,6 +109,8 @@ class Game {
         });
 
         this.socket.on('gameOver', (isWinner) => {
+            const url = new URL(window.location.href);
+            
             var gameover = document.querySelector(".overlay");
             gameover.hidden = false;
             document.querySelector(".overlay .overlay-heading").textContent = "Game over";
@@ -122,9 +124,10 @@ class Game {
                 document.querySelector(".overlay .overlay-text").textContent = "You lose";
             }
             document.querySelector(".overlay").addEventListener("click", () => {
-                let url = new URL(window.location.href);
                 window.location.href = `/${url.search}`;
             });
+
+            this.socket.emit('gameOver', {id: url.searchParams.get('id')}); // socket.js
 
             // this.socket.emit('gameOver', {id: this.field.player.userID}); // socket.js
         });
