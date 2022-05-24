@@ -7,8 +7,8 @@ html(lang="en")
         link(rel="preconnect", href="https://fonts.googleapis.com")
         link(rel="preconnect", href="https://fonts.gstatic.com", crossorigin)
         link(href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,700;0,900;1,300;1,400;1,700&family=Poppins:ital,wght@0,400;0,500;0,600;0,700;0,800;1,500;1,600&display=swap", rel="stylesheet")
-        link(rel="stylesheet", href="styles/_base.css")
-        link(rel="stylesheet", href="styles/form.css")
+        link(rel="stylesheet", href="/styles/_base.css")
+        link(rel="stylesheet", href="/styles/form.css")
         title Start the Game
     body 
         .main-container
@@ -22,9 +22,9 @@ html(lang="en")
                     .notify.form-item
             .start-container
                 .link-container
-                    a.link-text(href="/login") Back to login 
-                .start-menu
-                    button.btn.left-20 Start the Game
+                    a.link-text(href="/logout") Logout 
+                .start-menu.left-20
+                    button.btn Start the Game
 
     script(src="/socket.io/socket.io.js")
     script(src="scripts/start-game.js" type="module")

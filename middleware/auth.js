@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import { TOKEN_SECRET } from "../const.js";
 
-function authenticateToken(req, res, next) {
+export function authenticateToken(req, res, next) {
     const token = req.cookies.token;
 
     if (!token) {
@@ -17,4 +17,14 @@ function authenticateToken(req, res, next) {
     next();
 }
 
-export default authenticateToken;
+export function checkIfLoggedIn(req, res, next) {
+
+    const token = req.cookies.token;
+
+    if (!token) {
+        return next();
+    }
+
+    res.redirect("/");
+
+}

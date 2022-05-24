@@ -2,11 +2,12 @@ import express from "express";
 import path from "path";
 import cookieParser from "cookie-parser";
 import initialize from "./models/init.js";
-import authenticateToken from "./middleware/auth.js";
+import { checkIfLoggedIn, authenticateToken } from "./middleware/auth.js";
 import loginRouter from "./routes/login.js";
 import registerRouter from "./routes/register.js";
 import uploadRouter from "./routes/avatar-upload.js";
 import gameRouter from "./routes/game.js";
+import logoutRouter from "./routes/logout.js";
 import http from 'http';
 
 const app = express();
@@ -32,19 +33,22 @@ app.use(express.urlencoded({extended: true}));
 
 app.use(express.static(path.resolve("public")));
 
-app.use('(^(?!/login))(^(?!/register))', authenticateToken); // for all urls which don't start with /login and /register
-
-app.get('/', (req, res) => {
+app.get('/', authenticateToken, (req, res) => {
     res.render(path.resolve(viewPath, 'index.pug'));
 });
 
-app.use('/', uploadRouter);
-app.use('/login', loginRouter);
-app.use('/register', registerRouter);
-app.use('/game', gameRouter);
+app.use('/login', checkIfLoggedIn, loginRouter);
+app.use('/register', checkIfLoggedIn, registerRouter);
+app.use('/avatar-upload', authenticateToken, uploadRouter);
+app.use('/game', authenticateToken, gameRouter);
+app.use('/logout', authenticateToken, logoutRouter);
 
-app.get('/waiting', (req, res) => {
+app.get('/waiting', authenticateToken, (req, res) => {
     res.render(path.resolve(viewPath, 'waiting.pug'));
+});
+
+app.all("*", (req, res) => {
+    res.render(path.resolve(viewPath, "404.pug"));
 });
 
 server.listen(port, host, () => {

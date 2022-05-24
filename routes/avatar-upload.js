@@ -4,7 +4,7 @@ import uploadController from "../controllers/upload-controller.js";
 
 const router = express.Router();
 
-router.post('/avatar-upload', [
+router.post('/', [
     fileUpload,
     uploadController
 ]);

@@ -54,11 +54,11 @@ body {
     pointer-events: none;
 }
 
-.btn.top-20 {
+.top-20 {
     margin-top: 20px;
 }
 
-.btn.left-20 {
+.left-20 {
     margin-left: 20px;
 }
 
