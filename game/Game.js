@@ -15,6 +15,11 @@ class Game {
         this.players.forEach((player, idx) => {
             const opponent = this.players[(idx + 1) % 2];
 
+            player.socket.on("checkCardIsActive", (cardId) => {
+                if (player.checkCardIsActive(cardId))
+                    player.socket.emit('cardSelected', cardId); // mb rename event
+            });
+
             player.socket.on('moveCardToBoard', (cardId) => {
                 if (player.moveCardToBoard(cardId)) {
                     player.socket.emit('moveCardToBoard', cardId);
@@ -28,14 +33,15 @@ class Game {
 
                 player.attackCardOnBoard(attackerId, target.attack_points);
                 opponent.attackCardOnBoard(targetId, attacker.attack_points);
+                attacker.isActive = false;
 
                 player.socket.emit('attackCard', attacker, target);
                 opponent.socket.emit('attackCard', target, attacker);
 
-                console.log('player.board');
-                console.log(player.board);
-                console.log('opponent.board');
-                console.log(opponent.board);
+                // console.log('player.board');
+                // console.log(player.board);
+                // console.log('opponent.board');
+                // console.log(opponent.board);
             });
 
             player.socket.on('attackOpponent', (attackerId) => {
@@ -129,7 +135,7 @@ class Game {
         const player = this.players[playerIdx];
         const opponent = this.players[(playerIdx + 1) % 2];
 
-        player.socket.emit('turn');
+        player.socket.emit('turn', player.board);
         opponent.socket.emit('oppTurn');
         
         this.getCardsToHand(playerIdx, 1);

@@ -100,7 +100,7 @@ class Game {
 
         });
 
-        this.socket.on('turn', () => {
+        this.socket.on('turn', (board) => {
             this.setPlayerTurn();
         });
 

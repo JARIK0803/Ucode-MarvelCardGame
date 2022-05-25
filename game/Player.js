@@ -12,8 +12,6 @@ class Player {
     static MAX_CARDS_ON_BOARD = 5;
 
     constructor (user, oppSocket) {
-        //перевірка чи атакувала карта цього ходу
-        //визначити як відобоажувати: карта вже ходила, макс кількість карт на столі
         this.socket = user.socket;
         this.userID = user.id;
 
@@ -88,6 +86,17 @@ class Player {
         return card;
     }
 
+    checkCardIsActive(cardId) {
+        let card = this.board.find(elem => elem.id === cardId);
+
+        if (!card.isActive) {
+            this.socket.emit('warning', `Cards may only attack once per turn!`);
+            return false;
+        }
+
+        return true;
+    }
+
     moveCardToBoard(cardId) {
         let idx = this.hand.findIndex(elem => elem.id === cardId);
 
@@ -134,8 +143,9 @@ class Player {
         });
 
         this.cardDeck = [...cards].map((card, idx) => {
-            let cardData = card.dataValues;
+            let cardData = card.dataValues;// {id:num, defense_points:num, attack_points:num, cost:num}
             cardData.id = idx; //set unique id for all cards in deck
+            cardData.isActive = false;
             return {...cardData};
         }).sort(() => 0.5 - Math.random());
     }
