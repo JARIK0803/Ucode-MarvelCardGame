@@ -141,3 +141,7 @@
 .card.target-card {
     box-shadow: 0 0 20px 0 rgba(var(--color-defense), 1);
 }
+
+.card.available-card {
+    box-shadow: 0 0 20px 0 rgba(var(--color-available), 1);
+}

@@ -127,9 +127,7 @@ class Game {
                 window.location.href = `/${url.search}`;
             });
 
-            this.socket.emit('gameOver', {id: url.searchParams.get('id')}); // socket.js
-
-            // this.socket.emit('gameOver', {id: this.field.player.userID}); // socket.js
+            this.socket.emit('gameOver', {id: url.searchParams.get('id')});
         });
 
     }
@@ -150,7 +148,8 @@ class Game {
             timerText.textContent = `00:${countText}`;
             count--;
         }, 1000);
-        this.field.clearChosenCards();        
+        this.field.clearChosenCards();   
+        this.field.setAvailableCards();    
 
     }
 

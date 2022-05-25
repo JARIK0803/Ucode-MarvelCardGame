@@ -11,6 +11,7 @@
     --color-defense: 13, 130, 236;
     --color-attack: 226, 143, 10;
     --color-cost: 106, 103, 243;
+    --color-available: 143, 226, 178;
 
     --shadow-lg: 0 0 20px 0 rgba(0, 0, 0, .3);
     --shadow-md: 0 0 12px 2px rgba(0, 0, 0, .2);
