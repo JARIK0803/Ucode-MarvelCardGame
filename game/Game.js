@@ -38,10 +38,10 @@ class Game {
                 player.socket.emit('attackCard', attacker, target);
                 opponent.socket.emit('attackCard', target, attacker);
 
-                // console.log('player.board');
-                // console.log(player.board);
-                // console.log('opponent.board');
-                // console.log(opponent.board);
+                console.log('player.board');
+                console.log(player.board);
+                console.log('opponent.board');
+                console.log(opponent.board);
             });
 
             player.socket.on('attackOpponent', (attackerId) => {
@@ -134,6 +134,8 @@ class Game {
     startTurn(playerIdx) {
         const player = this.players[playerIdx];
         const opponent = this.players[(playerIdx + 1) % 2];
+
+        player.setBoardCardsActive();
 
         player.socket.emit('turn', player.board);
         opponent.socket.emit('oppTurn');
