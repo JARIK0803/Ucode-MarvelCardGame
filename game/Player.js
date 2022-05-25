@@ -97,6 +97,12 @@ class Player {
         return true;
     }
 
+    setBoardCardsActive() {
+        this.board.forEach(card => {
+            card.isActive = true;
+        })
+    }
+
     moveCardToBoard(cardId) {
         let idx = this.hand.findIndex(elem => elem.id === cardId);
 
