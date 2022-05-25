@@ -35,12 +35,14 @@ class Board {
                 }
                 if (this.attackInProgress() || !this.player.turn)
                     return;
+
+                this.player.socket.emit("checkCardIsActive", card.cardData.id);
     
-                this.clearAttacker();
-                this.selectedAttacker = card;
-                card.cardHTML.classList.remove("available-card");
-                card.cardHTML.classList.add(attackClass);
-                this.player.socket.emit("selectCard", card.cardData.id, false);
+                // this.clearAttacker();
+                // this.selectedAttacker = card;
+                // card.cardHTML.classList.remove("available-card");
+                // card.cardHTML.classList.add(attackClass);
+                // this.player.socket.emit("selectCard", card.cardData.id, false);
     
             });
             
@@ -51,6 +53,15 @@ class Board {
             this.player.hand.splice(idx, 1);
             this.updateMana();
 
+        });
+
+        this.player.socket.on('cardIsActive', (cardId) => {
+            let card = this.findCardById(cardId, true);
+            this.clearAttacker();
+            this.selectedAttacker = card;
+            card.cardHTML.classList.remove("available-card");
+            card.cardHTML.classList.add(attackClass);
+            this.player.socket.emit("selectCard", card.cardData.id, false);
         });
 
         this.player.socket.on('selectCard', (cardId, isTarget, attackerId) => {
@@ -209,6 +220,23 @@ class Board {
         const manaBar = document.querySelector(".mana-progress-bar");
         manaBar.style.width = `${currentMana * 10}%`;
 
+        if (allMana !== 0) {
+            this.setAvailableCardsInHand();
+        }
+
+    }
+    
+    setAvailableCardsInHand() {
+
+        this.player.hand.forEach((card) => {
+            if (card.cardData.cost <= this.player.mana) {
+                card.cardHTML.classList.add("available-card");
+            }
+            else {
+                card.cardHTML.classList.remove("available-card");
+            }
+        });
+
     }
 
     clearChosenCards() {
@@ -226,6 +254,10 @@ class Board {
 
         this.playerHTMLEl.avatar.classList.remove("target-card");
         this.opponentHTMLEl.avatar.classList.remove("target-card");
+
+        this.player.hand.forEach((card) => {
+            card.cardHTML.classList.remove("available-card");
+        });
 
     }
 

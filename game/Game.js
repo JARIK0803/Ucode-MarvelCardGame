@@ -17,7 +17,7 @@ class Game {
 
             player.socket.on("checkCardIsActive", (cardId) => {
                 if (player.checkCardIsActive(cardId))
-                    player.socket.emit('cardSelected', cardId); // mb rename event
+                    player.socket.emit('cardIsActive', cardId); // mb rename event
             });
 
             player.socket.on('moveCardToBoard', (cardId) => {
