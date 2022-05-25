@@ -104,7 +104,6 @@ export default function (socket) {
     socket.on('initGame', function(data) {
         getInfo(data.id)
         .then(user => {
-            // socket.emit('getInfo', user);
             var pair = findPair(data.id);
             if (pair[2]) {
                 user.socket = socket;
@@ -116,7 +115,6 @@ export default function (socket) {
                 return null;
             }
         })
-        // .then(game => {})
         .catch(err => console.error(err));
     });
 

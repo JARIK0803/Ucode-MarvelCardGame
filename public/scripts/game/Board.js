@@ -29,6 +29,7 @@ class Board {
                 const attackClass = "attacker-card";
                 if (card.cardHTML.classList.contains(attackClass)) {
                     card.cardHTML.classList.remove(attackClass);
+                    card.cardHTML.classList.add("available-card");
                     this.clearAttacker();
                     return;
                 }
@@ -37,8 +38,9 @@ class Board {
     
                 this.clearAttacker();
                 this.selectedAttacker = card;
+                card.cardHTML.classList.remove("available-card");
                 card.cardHTML.classList.add(attackClass);
-                this.player.socket.emit("clickCard", card.cardData.id, false);
+                this.player.socket.emit("selectCard", card.cardData.id, false);
     
             });
             
@@ -103,7 +105,7 @@ class Board {
         
         if (!this.selectedAttacker) return;
         this.selectedAttacker.cardHTML.classList.remove("attacker-card");
-        this.player.socket.emit("unclickCard", this.selectedAttacker.cardData.id);
+        this.player.socket.emit("unselectCard", this.selectedAttacker.cardData.id);
         this.selectedAttacker = null;
         
     }
@@ -166,7 +168,7 @@ class Board {
             if (this.selectedAttacker) {
                 this.selectedTarget = card;
                 card.cardHTML.classList.add("target-card");
-                this.player.socket.emit("clickCard", card.cardData.id, true, this.selectedAttacker.cardData.id);
+                this.player.socket.emit("selectCard", card.cardData.id, true, this.selectedAttacker.cardData.id);
                 this.player.socket.emit("attackCard", this.selectedAttacker.cardData.id, this.selectedTarget.cardData.id);
 
                 this.clearAttack();
@@ -214,6 +216,7 @@ class Board {
         this.cards.forEach((card) => {
             card.cardHTML.classList.remove("attacker-card");
             card.cardHTML.classList.remove("target-card");
+            card.cardHTML.classList.remove("available-card");
         });
 
         this.oppCards.forEach((card) => {
@@ -223,6 +226,14 @@ class Board {
 
         this.playerHTMLEl.avatar.classList.remove("target-card");
         this.opponentHTMLEl.avatar.classList.remove("target-card");
+
+    }
+
+    setAvailableCards() {
+
+        this.cards.forEach((card) => {
+            card.cardHTML.classList.add("available-card");
+        });
 
     }
 
@@ -236,7 +247,7 @@ class Board {
             var card = { cardHTML: this.opponentHTMLEl.avatar };
             this.selectedTarget = card;
             card.cardHTML.classList.add("target-card");
-            this.player.socket.emit("clickCard", -1, true, this.selectedAttacker.cardData.id);
+            this.player.socket.emit("selectCard", -1, true, this.selectedAttacker.cardData.id);
             this.player.socket.emit("attackOpponent", this.selectedAttacker.cardData.id);
             this.clearAttack();
 
