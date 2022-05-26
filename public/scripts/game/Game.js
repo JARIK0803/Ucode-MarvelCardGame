@@ -4,7 +4,7 @@ import HiddenCard from "./HiddenCard.js";
 
 class Game {
 
-    static assetsDir = "assets";
+    static AVATAR_PLACEHOLDER_PATH = "assets/avatar_placeholder.png"
     constructor(socket) {
 
         this.socket = socket;
@@ -229,7 +229,10 @@ class Game {
         nickname.textContent = player.nickname;
 
         let img = document.querySelector(`#player-${player.id} .player-avatar > img`);
-        img.src = `data:image/jpeg;base64,${player.avatar}`;
+        if (player.avatar)
+            img.src = `data:image/jpeg;base64,${player.avatar}`;
+        else
+            img.src = Game.AVATAR_PLACEHOLDER_PATH;
 
         return { template: playerClone, health: health, avatar: document.querySelector(`#player-${player.id} .player-avatar`) };
 

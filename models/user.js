@@ -1,5 +1,3 @@
-const strRegexp = /^\w+$/;
-
 export default function initUser (sequelize, DataTypes) {
 
     return sequelize.define("user", {
