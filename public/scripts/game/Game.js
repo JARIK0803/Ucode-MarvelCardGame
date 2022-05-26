@@ -23,8 +23,6 @@ class Game {
         this.socket.on('initPlayersData', (playersData) => {
             playersData = JSON.parse(playersData);
             
-            // this.field = new Board({...playersData.player, socket: this.socket});
-
             let playerHTMLEl = this.displayPlayer(playersData.player, true);
             let opponentHTMLEl = this.displayPlayer(playersData.opponent, false);
 
@@ -92,11 +90,16 @@ class Game {
             overlayHeading.textContent = "Warning";
             overlayText.textContent = msg;
             
-            setTimeout(() => {
+            const hideOverlay = () => {
                 overlay.hidden = true;
                 overlayHeading.textContent = "";
                 overlayText.textContent = "";
-            }, 2000);
+                overlay.removeEventListener("click", hideOverlay);
+                clearTimeout(hideOverlay);
+            }
+
+            overlay.addEventListener("click", hideOverlay);
+            setTimeout(hideOverlay, 2000);
 
         });
 

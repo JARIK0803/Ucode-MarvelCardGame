@@ -38,12 +38,6 @@ class Board {
 
                 this.player.socket.emit("checkCardIsActive", card.cardData.id);
     
-                // this.clearAttacker();
-                // this.selectedAttacker = card;
-                // card.cardHTML.classList.remove("available-card");
-                // card.cardHTML.classList.add(attackClass);
-                // this.player.socket.emit("selectCard", card.cardData.id, false);
-    
             });
             
             cardContainer.appendChild(card.cardHTML);
@@ -56,6 +50,7 @@ class Board {
         });
 
         this.player.socket.on('cardIsActive', (cardId) => {
+            const attackClass = "attacker-card";
             let card = this.findCardById(cardId, true);
             this.clearAttacker();
             this.selectedAttacker = card;
@@ -112,11 +107,14 @@ class Board {
 
     }
 
-    clearAttacker() {
+    clearAttacker(unselect = true) {
         
         if (!this.selectedAttacker) return;
+        
         this.selectedAttacker.cardHTML.classList.remove("attacker-card");
-        this.player.socket.emit("unselectCard", this.selectedAttacker.cardData.id);
+        if (unselect)
+            this.player.socket.emit("unselectCard", this.selectedAttacker.cardData.id);
+        
         this.selectedAttacker = null;
         
     }
@@ -124,6 +122,7 @@ class Board {
     clearTarget() {
         
         if (!this.selectedTarget) return;
+        
         this.selectedTarget.cardHTML.classList.remove("target-card");
         this.selectedTarget = null;
     
@@ -131,10 +130,8 @@ class Board {
 
     clearAttack() {
 
-        setTimeout(() => {
-            this.clearAttacker();
-            this.clearTarget();
-        }, 3000);
+        this.clearAttacker(false);
+        this.clearTarget();
 
     }
 
