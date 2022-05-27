@@ -1,4 +1,6 @@
 @import "_vars.css";
+@import "elements/btn.css";
+@import "elements/link.css";
 
 * {
     margin: 0;
@@ -10,6 +12,7 @@
 
 body {
     font-family: "Poppins", sans-serif;
+    background-color: rgba(var(--bg-primary), 1);
 }
 
 .main-container {
@@ -22,38 +25,6 @@ body {
     background-color: rgba(var(--bg-primary), 1);
 }
 
-/* Universal button styling */
-
-.btn {
-    display: inline-block;
-    min-width: 150px;
-    min-height: 40px;
-    padding: 16px;
-    border-radius: var(--border-radius-sm);
-    background-color: rgba(var(--bg-featured), 1);
-    font-size: 18px;
-    font-weight: 600;
-    color: rgba(var(--color-white-dull), 1);
-    transition: all .3s ease;
-    cursor: pointer;
-    user-select: none;
-}
-
-.btn:hover {
-    box-shadow: var(--shadow-btn);
-    transition: all .3s ease;
-}
-
-.btn:focus,
-.btn[disabled] {
-    background-color: rgba(var(--bg-featured), .6);
-    transition: all .3s ease;
-}
-
-.btn[disabled] {
-    pointer-events: none;
-}
-
 .top-20 {
     margin-top: 20px;
 }
@@ -62,30 +33,19 @@ body {
     margin-left: 20px;
 }
 
-/* Universal link styling */
-
-.link-container > .link-label,
-.link-container > .link-text,
-.notify {
-    font-size: 16px;
-}
-
-.link-container > .link-label {
-    color: rgba(var(--color-white), .5);
-    user-select: none;
-}
-
-.link-container > .link-text {
-    margin-left: 6px;
-    color: rgba(var(--color-white), .8);
-}
-
 .hidden {
     display: none;
 }
 
-.start-container {
-    display: flex;
-    align-items: center;
-    margin-top: 20px;
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+.page-animation {
+    animation: .15s ease-in both fadeIn;
 }

@@ -7,6 +7,12 @@ body {
     justify-content: center;
 }
 
+.start-container {
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+}
+
 .form-container {
     display: flex;
     align-items: center;
