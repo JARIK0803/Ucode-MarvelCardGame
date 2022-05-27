@@ -24,6 +24,7 @@ class Board {
             let idx = this.player.hand.findIndex(elem => elem.cardData.id === cardID);
             const card = this.player.hand[idx];
             card.cardHTML.classList.add("played");
+            card.cardHTML.classList.remove("available-card");
             card.cardHTML.addEventListener("click", () => {
                 
                 const attackClass = "attacker-card";
