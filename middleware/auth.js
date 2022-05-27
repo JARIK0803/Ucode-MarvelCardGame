@@ -25,6 +25,7 @@ export function checkIfLoggedIn(req, res, next) {
         return next();
     }
 
-    res.redirect("/");
+    const decoded = jwt.verify(token, TOKEN_SECRET);
+    res.redirect(`/?id=${decoded.id}`);
 
 }
