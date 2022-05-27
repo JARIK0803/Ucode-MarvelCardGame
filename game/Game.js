@@ -5,7 +5,6 @@ const Card = db.sequelize.models.card;
 class Game {
     constructor(p1, p2) {
         this.players = [p1, p2];
-        // this.turn = {};
 
         this.#setPlayersEvents();
         this.#startGame();
@@ -17,7 +16,7 @@ class Game {
 
             player.socket.on("checkCardIsActive", (cardId) => {
                 if (player.checkCardIsActive(cardId))
-                    player.socket.emit('cardIsActive', cardId); // mb rename event
+                    player.socket.emit('cardIsActive', cardId);
             });
 
             player.socket.on('moveCardToBoard', (cardId) => {
