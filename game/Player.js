@@ -116,19 +116,11 @@ class Player {
             return false;
         }
 
-        // if (this.board.length <= Player.MAX_CARDS_ON_BOARD && this.hand[idx].cost <= this.currMana) {
-            let card = this.hand.splice(idx, 1)[0];
-            this.board.push(card);
-            this.currMana -= card.cost;
+        let card = this.hand.splice(idx, 1)[0];
+        this.board.push(card);
+        this.currMana -= card.cost;
 
-            return true;
-        // }
-        // return false;
-        // let a = {
-        //     startCardStats: '',
-        //     currCardStats: '',
-        //     active: false
-        // }
+        return true;
     }
 
     attackCardOnBoard(targetId, reduceHp) {
@@ -149,8 +141,8 @@ class Player {
         });
 
         this.cardDeck = [...cards].map((card, idx) => {
-            let cardData = card.dataValues;// {id:num, defense_points:num, attack_points:num, cost:num}
-            cardData.id = idx; //set unique id for all cards in deck
+            let cardData = card.dataValues;     // {id:num, defense_points:num, attack_points:num, cost:num}
+            cardData.id = idx;                  //set unique id for all cards in deck
             cardData.isActive = false;
             return {...cardData};
         }).sort(() => 0.5 - Math.random());
