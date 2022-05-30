@@ -6,7 +6,10 @@ import initCard from "./card.js";
 
 const dbFilePath = path.resolve("config", "db-config.json");
 const dbOptFile = fs.readFileSync(dbFilePath);
-const dbOptions = JSON.parse(dbOptFile);
+const dbAllOptions = JSON.parse(dbOptFile);
+dbAllOptions.dev = process.env.NODE_ENV !== "test";
+
+const dbOptions = dbAllOptions.dev ? dbAllOptions.development : dbAllOptions.test;
 
 const sequelize = new Sequelize(
     dbOptions.database,

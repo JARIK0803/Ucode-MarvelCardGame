@@ -1,6 +1,7 @@
 import mysql from "mysql2/promise";
 import db from "./index.js";
 
+const isDev = process.env.NODE_ENV !== "test";
 const Card = db.sequelize.models.card; 
 
 async function initializeCards() {
@@ -36,12 +37,17 @@ export default async function initialize() {
     const conn = await mysql.createConnection({ host: host, user: user, password: password });
     await conn.query(`CREATE DATABASE IF NOT EXISTS ${database};`);
 
-    await db.sequelize.sync();
+    if (isDev)
+        await db.sequelize.sync();
+    else
+        await db.sequelize.sync({ force: true });
 
     let existsQuery = `EXISTS (SELECT * FROM ${database}.cards)`;
     let cards = await db.sequelize.query(`SELECT ${existsQuery}`);
     
     if (!cards[0][0][existsQuery])
         await initializeCards();
+    
+    await conn.end();
 
 }
